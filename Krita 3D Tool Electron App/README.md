@@ -1,4 +1,4 @@
-# my-3d-app
+# Krita 3D Tool Electron App
 
 An Electron application with React
 
