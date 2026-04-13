@@ -1,14 +1,14 @@
 # plugin/my_docker.py
-from krita import DockWidget, DockWidgetFactory, DockWidgetFactoryBase #type:ignore
+from krita import Krita ,DockWidget, DockWidgetFactory, DockWidgetFactoryBase #type:ignore
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel #type:ignore
 
 
-class ThreeDToolDocker(DockWidget):
+class BilinearColorMixerDocker(DockWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("3D Tool")
+        self.setWindowTitle("Bilinear Color Mixer")
         
-        mainWidget = QWidget(self) # ? Stating that this new Widget is child of This Docker
+        mainWidget = QWidget(self) # ? perameter self stating that this new Widget is child of This Docker
         
         self.setWidget(mainWidget)
         layout = QVBoxLayout()
@@ -22,9 +22,9 @@ class ThreeDToolDocker(DockWidget):
         pass
 
 
-DOCKER_ID = 'krita_3d_tool_docker'
+DOCKER_ID = 'bilinear_color_mixer_docker'
 
 # Register the docker with Krita
-Krita.instance().addDockWidgetFactory( #type:ignore
-    DockWidgetFactory(DOCKER_ID, DockWidgetFactoryBase.DockRight, ThreeDToolDocker) 
+Krita.instance().addDockWidgetFactory( 
+    DockWidgetFactory(DOCKER_ID, DockWidgetFactoryBase.DockRight, BilinearColorMixerDocker) 
 ) 
