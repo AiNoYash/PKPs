@@ -1,14 +1,3 @@
-:root {
-  --color-bg-app: #202020;
-  --color-bg-title: #151515;
-  --color-surface-panel: #2C2C2C;
-  --color-border: #151515;
-  --color-accent: #3D6896;
-  --color-text-primary: #D6D6D6;
-  --color-text-secondary: #8A8A8A;
-}
-
-
 .app-container {
     width: 100%;
     height: 100%;
@@ -18,8 +7,34 @@
 
 .title-bar {
     width: 100%;
-    height: 30px;
+    height: 33px;
+    /* ? All the ui is actually going to scale by 1.25(because of my pc's screen scaling lol) so 33 will become 1.25 * 33 for me and i think this looks good enought lol*/
     background-color: var(--color-bg-title);
     display: flex;
-    app-region: drag; 
+    justify-content: start;
+    align-items: center;
+    app-region: drag;
+}
+
+.title-bar>.controls {
+    height: 100%;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.title-bar>.controls>button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 8px 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    app-region: no-drag
+}
+
+.title-bar>.controls>button:hover {
+    background-color: var(--color-bg-app);
 }

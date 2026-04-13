@@ -1,10 +1,12 @@
 :root {
   --color-bg-app: #202020;
+  --color-bg-title: #151515;
   --color-surface-panel: #2C2C2C;
   --color-border: #151515;
   --color-accent: #3D6896;
   --color-text-primary: #D6D6D6;
   --color-text-secondary: #8A8A8A;
+  --scale-factor: 1.25px;
 }
 
 /* 1. Box Sizing Setup */

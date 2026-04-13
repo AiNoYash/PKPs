@@ -12,21 +12,22 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
+    show: false,
     titleBarStyle: 'hidden',
-    fullscreen: true,
     titleBarOverlay: {
       color: "#151515", // ? Colors taken from index.css color-bg-border and color-text-secondary
       symbolColor: "#8A8A8A",
-      height: 30
+      height: 33
     },
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
     }
   });
 
-  // mainWindow.on('ready-to-show', () => {
-  //   mainWindow.show()
-  // })
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.maximize();
+    mainWindow.show();
+  });
 
 
   // HMR for renderer base on electron-vite cli.
