@@ -12,6 +12,13 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
+    titleBarStyle: 'hidden',
+    fullscreen: true,
+    titleBarOverlay: {
+      color: "#151515", // ? Colors taken from index.css color-bg-border and color-text-secondary
+      symbolColor: "#8A8A8A",
+      height: 30
+    },
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
     }
@@ -65,7 +72,7 @@ if (!gotTheLock) {
     app.on('activate', function () {
       if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });
-  
+
   });
 
 

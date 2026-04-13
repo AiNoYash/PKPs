@@ -1,0 +1,25 @@
+:root {
+  --color-bg-app: #202020;
+  --color-bg-title: #151515;
+  --color-surface-panel: #2C2C2C;
+  --color-border: #151515;
+  --color-accent: #3D6896;
+  --color-text-primary: #D6D6D6;
+  --color-text-secondary: #8A8A8A;
+}
+
+
+.app-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.title-bar {
+    width: 100%;
+    height: 30px;
+    background-color: var(--color-bg-title);
+    display: flex;
+    app-region: drag; 
+}
