@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Krita/PythonPlugin
+X-KDE-Library=krita_3d_tool_plugin
+X-Python-2-Compatible=false
+Name=Krita 3D Tool
+Comment=A Krita 3D Tool plugin joining with Krita 3D Tool App

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Krita/PythonPlugin
+X-KDE-Library=bilinear_color_mixer_plugin
+X-Python-2-Compatible=false
+Name=Bilinear Color Mixer
+Comment=A bilinear color mixer tool
