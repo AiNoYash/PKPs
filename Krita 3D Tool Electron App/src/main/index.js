@@ -3,6 +3,8 @@
 import { app, BrowserWindow } from 'electron';
 import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
+import { ipcMain } from 'electron';
+
 
 
 let mainWindow = null;
@@ -17,7 +19,7 @@ function createWindow() {
     titleBarOverlay: {
       color: "#151515", // ? Colors taken from index.css color-bg-border and color-text-secondary
       symbolColor: "#8A8A8A",
-      height: 33
+      height: 33 // ? Details about why we are using 33 is given in index.css
     },
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -55,8 +57,6 @@ if (!gotTheLock) {
   });
 
 
-
-
   // This method will be called when Electron has finished initialization and is ready to create browser windows.
   // ? Some APIs can only be used after this event occurs.
   app.whenReady().then(() => {
@@ -82,6 +82,11 @@ if (!gotTheLock) {
     if (process.platform !== 'darwin') {
       app.quit();
     }
+  });
+
+
+  ipcMain.on('quit-app', () => {
+    app.quit();
   });
 }
 

@@ -6,6 +6,7 @@
   --color-accent: #3D6896;
   --color-text-primary: #D6D6D6;
   --color-text-secondary: #8A8A8A;
+  --color-divider: rgba(255, 255, 255, 0.1);
   --scale-factor: 1.25px;
 }
 

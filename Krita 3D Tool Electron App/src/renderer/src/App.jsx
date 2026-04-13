@@ -1,5 +1,6 @@
 import { TitleBar } from "./components/TitleBar";
 import "./css/App.css";
+import "./css/ContextMenu.css";
 
 function App() {
 

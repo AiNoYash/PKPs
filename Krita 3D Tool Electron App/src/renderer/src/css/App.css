@@ -38,3 +38,6 @@
 .title-bar>.controls>button:hover {
     background-color: var(--color-bg-app);
 }
+.title-bar>.controls>button.active {
+    background-color: var(--color-bg-app);
+}
