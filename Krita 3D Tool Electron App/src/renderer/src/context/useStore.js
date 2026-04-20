@@ -3,7 +3,6 @@ import { create } from 'zustand';
 export const useProjectStore = create((set) => ({
 
     selectedObjectId: null,
-
     rootObjectIds: ['obj-krita-plane', 'obj-light-1'],
 
     objects: {
