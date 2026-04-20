@@ -86,6 +86,7 @@ if (!gotTheLock) {
       app.quit();
     }
   });
+  
 
   ipcMain.on('quit-app', () => {
     app.quit();
