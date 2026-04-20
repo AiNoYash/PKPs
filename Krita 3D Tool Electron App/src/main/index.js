@@ -19,7 +19,7 @@ function createWindow() {
     titleBarOverlay: {
       color: "#151515", // ? Colors taken from index.css color-bg-border and color-text-secondary
       symbolColor: "#8A8A8A",
-      height: 33 // ? Details about why we are using 33 is given in index.css
+      height: 33 // ? I am making app in 1.25 screen scaling and this looks perfect as 40 px so...
     },
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
