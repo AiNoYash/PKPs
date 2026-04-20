@@ -24,7 +24,8 @@
     "@react-three/fiber": "^9.5.0",
     "electron-store": "^11.0.2",
     "flexlayout-react": "^0.8.19",
-    "three": "^0.183.2"
+    "three": "^0.183.2",
+    "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^2.1.0",

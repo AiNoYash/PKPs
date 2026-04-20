@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { Scene } from './Scene';
+import { Hierarchy } from './Hierarchy';
+import { Inspector } from './Inspector';
+import { Project } from './Project';
 import { Layout, Model } from 'flexlayout-react';
 import '../css/FlexLayout.css';
 
@@ -33,7 +37,7 @@ const initialLayout = {
                     {
                         type: "tabset",
                         weight: 50,
-                        children: [{ type: "tab", name: "Viewport", component: "viewport" }]
+                        children: [{ type: "tab", name: "Scene", component: "scene" }]
                     },
                     {
                         type: "tabset",
@@ -57,8 +61,8 @@ export function Workspace() {
     const [model, setModel] = useState(() => Model.fromJson(initialLayout));
 
     useEffect(() => {
-        const loadLayout = async () => { 
-            const savedLayout = await Application.storeGet("saved-workspace-layout"); 
+        const loadLayout = async () => {
+            const savedLayout = await Application.storeGet("saved-workspace-layout");
 
             if (savedLayout) {
                 try {
@@ -75,17 +79,10 @@ export function Workspace() {
     const factory = (node) => {
         const component = node.getComponent();
 
-        const panelStyle = {
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'var(--color-surface-panel)',
-            padding: '10px'
-        };
-
-        if (component === "hierarchy") return <div style={panelStyle}>Image Object (Krita Layer Sync)</div>;
-        if (component === "viewport") return <div style={panelStyle}>React Three Fiber Canvas Goes Here</div>;
-        if (component === "inspector") return <div style={panelStyle}>Transform / Material Controls</div>;
-        if (component === "project") return <div style={panelStyle}>Assets / Imported Models</div>;
+        if (component === "hierarchy") return <Hierarchy />;
+        if (component === "scene") return <Scene />;
+        if (component === "inspector") return <Inspector />;
+        if (component === "project") return <Project />;
 
         return null;
     };
