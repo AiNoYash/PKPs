@@ -4,8 +4,8 @@ import { app, BrowserWindow } from 'electron';
 import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import { ipcMain } from 'electron';
-
-
+import { setupStoreHandlers } from './core/store';
+import { setupProjectHandlers } from './core/fs';
 
 let mainWindow = null;
 
@@ -49,6 +49,9 @@ if (!gotTheLock) {
 
 } else {
 
+  setupStoreHandlers();
+  setupProjectHandlers();
+
   app.on('second-instance', () => {
     if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore();
@@ -84,9 +87,7 @@ if (!gotTheLock) {
     }
   });
 
-
   ipcMain.on('quit-app', () => {
     app.quit();
   });
 }
-

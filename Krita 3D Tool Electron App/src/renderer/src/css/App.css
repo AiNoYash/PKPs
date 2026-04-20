@@ -16,9 +16,16 @@
     app-region: drag;
 }
 
+.title-bar > .logo{
+    height: 100%;
+    width: auto;
+    margin-left: 4px;
+    padding: 8px;
+}
+
 .title-bar>.controls {
     height: 100%;
-    margin-left: 10px;
+    /* margin-left: 10px; */
     display: flex;
     align-items: center;
     justify-content: center;
