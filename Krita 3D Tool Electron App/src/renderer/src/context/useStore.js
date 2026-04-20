@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export const useProjectStore = create((set) => ({
+export const useStore = create((set) => ({
 
     selectedObjectId: null,
     rootObjectIds: ['obj-krita-plane', 'obj-light-1'],
