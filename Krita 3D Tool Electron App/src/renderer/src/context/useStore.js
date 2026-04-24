@@ -56,7 +56,7 @@ export const useStore = create((set) => ({
         };
     }),
 
-    // 3. Add a new object
+
     addObject: (newObj) => set((state) => ({
         rootObjectIds: [...state.rootObjectIds, newObj.id],
         objects: { ...state.objects, [newObj.id]: newObj }
