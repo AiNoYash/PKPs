@@ -1,6 +1,12 @@
 import { create } from 'zustand';
+import { HandTools } from '../_enums/HandToolsEnum';
 
 export const useStore = create((set) => ({
+
+    selectedHandTool: HandTools.PAN,
+    selectHandTool: (handTool) => { set({ selectedHandTool: handTool }); },
+
+
 
     selectedObjectId: null,
     rootObjectIds: ['obj-krita-plane', 'obj-light-1'],
@@ -60,5 +66,12 @@ export const useStore = create((set) => ({
     addObject: (newObj) => set((state) => ({
         rootObjectIds: [...state.rootObjectIds, newObj.id],
         objects: { ...state.objects, [newObj.id]: newObj }
-    }))
+    })),
+
+
+
+
+
+
+
 }));

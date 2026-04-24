@@ -1,22 +1,75 @@
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Grid } from '@react-three/drei';
+import { OrbitControls, Grid, TransformControls, GizmoHelper, GizmoViewport } from '@react-three/drei';
 import { useStore } from "../context/useStore";
 import * as THREE from 'three';
+import { useRef } from 'react';
+
+import { HandIcon, ScaleIcon, RotateIcon, TranslateIcon } from "./SceneIcons"
+
+import "./SceneOverlay.css"
+import { HandTools } from '../_enums/HandToolsEnum';
 
 
 
 export function Scene() {
+
+    const { selectedHandTool, selectHandTool } = useStore();
+
+    const orbitRef = useRef(null);
+
     return (
         <>
             <div className='docker-content-container'>
+                <div className="hand-tools-container">
+                    <div className={`tools-svg-container ${selectedHandTool === HandTools.PAN ? "active" : ""}`}
+                        onClick={() => {
+                            selectHandTool(HandTools.PAN);
+                        }}>
+                        <HandIcon />
+                    </div>
+                    <div className={`tools-svg-container ${selectedHandTool === HandTools.TRANSLATE ? "active" : ""}`}
+                        onClick={() => {
+                            selectHandTool(HandTools.TRANSLATE);
+                        }}>
+                        <TranslateIcon />
+                    </div>
+                    <div className={`tools-svg-container ${selectedHandTool === HandTools.ROTATE ? "active" : ""}`}
+                        onClick={() => {
+                            selectHandTool(HandTools.ROTATE);
+                        }}>
+                        <RotateIcon />
+                    </div>
+                    <div className={`tools-svg-container ${selectedHandTool === HandTools.SCALE ? "active" : ""}`}
+                        onClick={() => {
+                            selectHandTool(HandTools.SCALE);
+                        }}>
+                        <ScaleIcon />
+                    </div>
+                </div>
                 <Canvas>
                     <color attach="background" args={['#1e1e1e']} />
 
-                    <ambientLight intensity={0.4} />
+                    <GizmoHelper
+                        alignment="top-right"
+                        margin={[80, 80]}
+                        onTarget={() => orbitRef.current?.target}
+                    >
+                        <GizmoViewport axisColors={['#C95D5D', '#7EA656', '#4C80B6']} labelColor="#D6D6D6" />
+                    </GizmoHelper>
+
                     <directionalLight position={[5, 10, 5]} intensity={1} />
+                    <ambientLight intensity={0.4} />
 
 
-                    <OrbitControls makeDefault />
+                    <OrbitControls makeDefault
+                        ref={orbitRef}
+                        mouseButtons={{
+                            LEFT: THREE.MOUSE.PAN,     // Left click + drag = Move/Pan
+                            MIDDLE: THREE.MOUSE.DOLLY, // Scroll wheel click + drag = Zoom in/out
+                            RIGHT: THREE.MOUSE.ROTATE  // Right click (or Ctrl+Click) = Rotate
+                        }}
+                        enabled={selectedHandTool === HandTools.PAN}
+                    />
                     <Grid
                         infiniteGrid={true}
                         cellSize={1}
@@ -27,11 +80,12 @@ export function Scene() {
                         side={THREE.DoubleSide}
                     />
 
-
-                    <mesh position={[0, 0, 0]}>
-                        <boxGeometry args={[1, 1, 1]} />
-                        <meshStandardMaterial color="mediumpurple" />
-                    </mesh>
+                    <TransformControls mode="rotate">
+                        <mesh position={[0, 0, 0]}>
+                            <boxGeometry args={[1, 1, 1]} />
+                            <meshStandardMaterial color="mediumpurple" />
+                        </mesh>
+                    </TransformControls>
 
                 </Canvas>
             </div>
