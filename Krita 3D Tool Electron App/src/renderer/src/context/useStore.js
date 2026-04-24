@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { HandTools } from '../_enums/HandToolsEnum';
+import { ObjectTypes } from '../_enums/ObjectTypesEnum';
 
 export const useStore = create((set) => ({
 
@@ -9,13 +10,14 @@ export const useStore = create((set) => ({
 
 
     selectedObjectId: null,
-    rootObjectIds: ['obj-krita-plane', 'obj-light-1'],
+    rootObjectIds: ['1', '2'],
 
     objects: {
-        'obj-krita-plane': {
-            id: 'obj-krita-plane',
-            name: 'Krita Layer Sync',
-            type: 'krita-image',
+        '1': {
+            id: '1',
+            name: 'Main container',
+            type: ObjectTypes.GROUP,
+
             parentId: null,
             childrenIds: [],
             transform: {
@@ -25,10 +27,10 @@ export const useStore = create((set) => ({
             },
         },
 
-        'obj-light-1': {
-            id: 'obj-light-1',
-            name: 'Directional Light',
-            type: 'light',
+        '2': {
+            id: '2',
+            name: 'group 2',
+            type: ObjectTypes.GROUP,
             parentId: null,
             childrenIds: [],
             transform: {
@@ -68,10 +70,63 @@ export const useStore = create((set) => ({
         objects: { ...state.objects, [newObj.id]: newObj }
     })),
 
+    addGroup: (name = 'Empty Group', parentId = null) => set((state) => {
+        const newId = `group-${Date.now()}`;
+
+        const newGroup = {
+            id: newId,
+            name: name,
+            type: ObjectTypes.GROUP,
+            parentId: parentId,
+            childrenIds: [],
+            visible: true,
+            locked: false,
+            transform: {
+                position: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        };
+
+        const newObjects = { ...state.objects, [newId]: newGroup };
+        const newRootObjectIds = [...state.rootObjectIds];
 
 
+        if (parentId && newObjects[parentId]) {
+            newObjects[parentId] = {
+                ...newObjects[parentId],
+                childrenIds: [...newObjects[parentId].childrenIds, newId]
+            };
+        } else {
+            newRootObjectIds.push(newId);
+        }
+
+        return {
+            objects: newObjects,
+            rootObjectIds: newRootObjectIds
+        };
+    }),
 
 
+    toggleVisibility: (id) => set((state) => {
+        const obj = state.objects[id];
+        if (!obj) return state;
+        return {
+            objects: {
+                ...state.objects,
+                [id]: { ...obj, visible: !obj.visible }
+            }
+        };
+    }),
 
-
+    toggleLock: (id) => set((state) => {
+        const obj = state.objects[id];
+        if (!obj) return state;
+        return {
+            objects: {
+                ...state.objects,
+                [id]: { ...obj, locked: !obj.locked }
+            }
+        };
+    }),
 }));

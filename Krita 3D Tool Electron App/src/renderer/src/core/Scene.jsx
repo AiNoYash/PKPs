@@ -70,6 +70,7 @@ export function Scene() {
                         }}
                         enabled={selectedHandTool === HandTools.PAN}
                     />
+                    
                     <Grid
                         infiniteGrid={true}
                         cellSize={1}
