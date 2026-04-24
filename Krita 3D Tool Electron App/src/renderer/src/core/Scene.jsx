@@ -4,48 +4,22 @@ import { useStore } from "../context/useStore";
 import * as THREE from 'three';
 import { useRef } from 'react';
 
-import { HandIcon, ScaleIcon, RotateIcon, TranslateIcon } from "./SceneIcons"
 
-import "./SceneOverlay.css"
 import { HandTools } from '../_enums/HandToolsEnum';
 
 
 
 export function Scene() {
 
-    const { selectedHandTool, selectHandTool } = useStore();
-
+    const { selectedHandTool, selectHandTool } = useStore((state) => ({ selectedHandTool: state.selectedHandTool, selectHandTool: state.selectHandTool }));
+    
     const orbitRef = useRef(null);
 
     return (
         <>
             <div className='docker-content-container'>
-                <div className="hand-tools-container">
-                    <div className={`tools-svg-container ${selectedHandTool === HandTools.PAN ? "active" : ""}`}
-                        onClick={() => {
-                            selectHandTool(HandTools.PAN);
-                        }}>
-                        <HandIcon />
-                    </div>
-                    <div className={`tools-svg-container ${selectedHandTool === HandTools.TRANSLATE ? "active" : ""}`}
-                        onClick={() => {
-                            selectHandTool(HandTools.TRANSLATE);
-                        }}>
-                        <TranslateIcon />
-                    </div>
-                    <div className={`tools-svg-container ${selectedHandTool === HandTools.ROTATE ? "active" : ""}`}
-                        onClick={() => {
-                            selectHandTool(HandTools.ROTATE);
-                        }}>
-                        <RotateIcon />
-                    </div>
-                    <div className={`tools-svg-container ${selectedHandTool === HandTools.SCALE ? "active" : ""}`}
-                        onClick={() => {
-                            selectHandTool(HandTools.SCALE);
-                        }}>
-                        <ScaleIcon />
-                    </div>
-                </div>
+
+
                 <Canvas>
                     <color attach="background" args={['#1e1e1e']} />
 
@@ -70,7 +44,7 @@ export function Scene() {
                         }}
                         enabled={selectedHandTool === HandTools.PAN}
                     />
-                    
+
                     <Grid
                         infiniteGrid={true}
                         cellSize={1}

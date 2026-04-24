@@ -1,7 +1,8 @@
 import { useStore } from '../context/useStore';
 import { ObjectTypes } from '../_enums/ObjectTypes';
-import { HandTools } from '../../_enums/HandToolsEnum';
 
+import { HandTools } from '../../_enums/HandToolsEnum';
+import { TransformControls } from '@react-three/drei';
 
 export function SceneNode({ id }) {
 
@@ -10,8 +11,6 @@ export function SceneNode({ id }) {
     const selectedHandTool = useStore((state) => state.selectedHandTool);
 
     if (!obj) return null;
-
-    const selectedObjectId = useStore((state) => state.selectedObjectId);
 
     const pos = [obj.transform.position.x, obj.transform.position.y, obj.transform.position.z];
     const rot = [obj.transform.rotation.x, obj.transform.rotation.y, obj.transform.rotation.z];
@@ -22,6 +21,12 @@ export function SceneNode({ id }) {
             <SceneNode key={childId} id={childId} />
         ));
     };
+
+    const handlePointerDown = (e) => {
+        e.stopPropagation();
+        selectObject(id);
+    };
+
 
     switch (obj.type) {
         case ObjectTypes.GROUP:
