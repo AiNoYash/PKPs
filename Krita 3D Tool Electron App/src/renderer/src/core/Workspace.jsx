@@ -5,7 +5,7 @@ import { Inspector } from './Inspector';
 import { Project } from './Project';
 import { Layout, Model } from 'flexlayout-react';
 import '../css/FlexLayout.css';
-
+import "../css/Docker.css";
 
 const initialLayout = {
     global: {
