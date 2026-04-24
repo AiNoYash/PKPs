@@ -17,7 +17,8 @@ export const useStore = create((set) => ({
             id: '1',
             name: 'Main container',
             type: ObjectTypes.GROUP,
-
+            visible: true,
+            locked: false,
             parentId: null,
             childrenIds: [],
             transform: {
@@ -31,6 +32,8 @@ export const useStore = create((set) => ({
             id: '2',
             name: 'group 2',
             type: ObjectTypes.GROUP,
+            visible: true,
+            locked: false,
             parentId: null,
             childrenIds: [],
             transform: {
