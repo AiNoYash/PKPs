@@ -6,44 +6,19 @@ import { useRef } from 'react';
 
 
 import { HandTools } from '../_enums/HandToolsEnum';
-
-
+import { SceneTransformController } from './Scene/SceneTransformController';
+import { SceneRenderer } from './Scene/SceneRenderer';
 
 export function Scene() {
 
     const { selectedHandTool, selectHandTool } = useStore((state) => ({ selectedHandTool: state.selectedHandTool, selectHandTool: state.selectHandTool }));
-    
     const orbitRef = useRef(null);
 
     return (
         <>
             <div className='docker-content-container'>
-
-
                 <Canvas>
                     <color attach="background" args={['#1e1e1e']} />
-
-                    <GizmoHelper
-                        alignment="top-right"
-                        margin={[80, 80]}
-                        onTarget={() => orbitRef.current?.target}
-                    >
-                        <GizmoViewport axisColors={['#C95D5D', '#7EA656', '#4C80B6']} labelColor="#D6D6D6" />
-                    </GizmoHelper>
-
-                    <directionalLight position={[5, 10, 5]} intensity={1} />
-                    <ambientLight intensity={0.4} />
-
-
-                    <OrbitControls makeDefault
-                        ref={orbitRef}
-                        mouseButtons={{
-                            LEFT: THREE.MOUSE.PAN,     // Left click + drag = Move/Pan
-                            MIDDLE: THREE.MOUSE.DOLLY, // Scroll wheel click + drag = Zoom in/out
-                            RIGHT: THREE.MOUSE.ROTATE  // Right click (or Ctrl+Click) = Rotate
-                        }}
-                        enabled={selectedHandTool === HandTools.PAN}
-                    />
 
                     <Grid
                         infiniteGrid={true}
@@ -55,12 +30,29 @@ export function Scene() {
                         side={THREE.DoubleSide}
                     />
 
-                    <TransformControls mode="rotate">
-                        <mesh position={[0, 0, 0]}>
-                            <boxGeometry args={[1, 1, 1]} />
-                            <meshStandardMaterial color="mediumpurple" />
-                        </mesh>
-                    </TransformControls>
+                    <GizmoHelper
+                        alignment="top-right"
+                        margin={[80, 80]}
+                        onTarget={() => orbitRef.current?.target}
+                    >
+                        <GizmoViewport axisColors={['#C95D5D', '#7EA656', '#4C80B6']} labelColor="#D6D6D6" />
+                    </GizmoHelper>
+
+                    <OrbitControls makeDefault
+                        ref={orbitRef}
+                        mouseButtons={{
+                            LEFT: THREE.MOUSE.PAN,     // Left click + drag = Move/Pan
+                            MIDDLE: THREE.MOUSE.DOLLY, // Scroll wheel click + drag = Zoom in/out
+                            RIGHT: THREE.MOUSE.ROTATE  // Right click (or Ctrl+Click) = Rotate
+                        }}
+                        enabled={selectedHandTool === HandTools.PAN} // ! This could get overriden by some weird component updating default oribitcontrols' threejs state without chaning react state  
+                    />
+
+                    <directionalLight position={[5, 10, 5]} intensity={1} />
+                    <ambientLight intensity={0.4} />
+
+                    <SceneTransformController />
+                    <SceneRenderer />
 
                 </Canvas>
             </div>

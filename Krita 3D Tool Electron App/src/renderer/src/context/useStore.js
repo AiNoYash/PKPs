@@ -103,11 +103,6 @@ export const useStore = create((set) => ({
         } else {
             newRootObjectIds.push(newId);
         }
-
-        return {
-            objects: newObjects,
-            rootObjectIds: newRootObjectIds
-        };
     }),
 
 

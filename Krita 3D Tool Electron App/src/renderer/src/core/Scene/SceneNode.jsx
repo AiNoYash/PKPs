@@ -24,6 +24,9 @@ export function SceneNode({ id }) {
     };
 
     const handlePointerDown = (e) => {
+        if (obj.locked)
+            return;
+
         e.stopPropagation();
         selectObject(id);
     };
@@ -32,35 +35,19 @@ export function SceneNode({ id }) {
     switch (obj.type) {
         case ObjectTypes.GROUP:
             return (
-                <>
-                    {selectedObjectId === id && selectedHandTool !== HandTools.PAN ?
-                        <TransformControls mode={selectedHandTool.toLowerCase()}>
-                            <group
-                                position={pos}
-                                rotation={rot}
-                                scale={scl}
-                                visible={obj.visible}
-                                name={obj.name}
-                                userData={{ isLocked: obj.locked }}
-                            >
-                                {renderChildren()}
-                            </group>
-                        </TransformControls>
-                        :
-                        <group
-                            position={pos}
-                            rotation={rot}
-                            scale={scl}
-                            visible={obj.visible}
-                            name={obj.name}
-                            userData={{ isLocked: obj.locked }}
-                        >
-                            {renderChildren()}
-                        </group>
-                    }
-                </>
+                <group
+                    name={id}
+                    position={pos}
+                    rotation={rot}
+                    scale={scl}
+                    visible={obj.visible}
+                    name={obj.name}
+                    userData={{ isLocked: obj.locked }}
+                    onPointerDown={handlePointerDown}
+                >
+                    {renderChildren()}
+                </group>
             );
-
 
         default:
             return null;
