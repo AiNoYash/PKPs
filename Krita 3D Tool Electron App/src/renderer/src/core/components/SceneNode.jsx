@@ -1,10 +1,13 @@
 import { useStore } from '../context/useStore';
 import { ObjectTypes } from '../_enums/ObjectTypes';
+import { HandTools } from '../../_enums/HandToolsEnum';
+
 
 export function SceneNode({ id }) {
+
     const obj = useStore((state) => state.objects[id]);
     const selectedObjectId = useStore((state) => state.selectedObjectId);
-    const 
+    const selectedHandTool = useStore((state) => state.selectedHandTool);
 
     if (!obj) return null;
 
@@ -23,21 +26,9 @@ export function SceneNode({ id }) {
     switch (obj.type) {
         case ObjectTypes.GROUP:
             return (
-
                 <>
-                    {selectedObjectId === id ?
-                        <group
-                            position={pos}
-                            rotation={rot}
-                            scale={scl}
-                            visible={obj.visible}
-                            name={obj.name}
-                            userData={{ isLocked: obj.locked }}
-                        >
-                            {renderChildren()}
-                        </group>
-                        :
-                        <TransformControls mode="rotate">
+                    {selectedObjectId === id && selectedHandTool !== HandTools.PAN ?
+                        <TransformControls mode={selectedHandTool.toLowerCase()}>
                             <group
                                 position={pos}
                                 rotation={rot}
@@ -49,10 +40,22 @@ export function SceneNode({ id }) {
                                 {renderChildren()}
                             </group>
                         </TransformControls>
-
+                        :
+                        <group
+                            position={pos}
+                            rotation={rot}
+                            scale={scl}
+                            visible={obj.visible}
+                            name={obj.name}
+                            userData={{ isLocked: obj.locked }}
+                        >
+                            {renderChildren()}
+                        </group>
                     }
                 </>
             );
+
+
         default:
             return null;
     }
