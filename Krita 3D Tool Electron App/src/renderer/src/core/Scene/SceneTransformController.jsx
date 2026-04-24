@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useThree } from '@react-three/fiber';
 import { TransformControls } from '@react-three/drei';
-import { useStore } from '../context/useStore';
 import { HandTools } from '../../_enums/HandToolsEnum';
+import { useStore } from '../../context/useStore';
 
 export function SceneTransformController() {
     

@@ -1,6 +1,5 @@
+import { useStore } from '../../context/useStore';
 import { TransformControls } from '@react-three/drei';
-
-import { useStore } from '../context/useStore';
 import { ObjectTypes } from '../../_enums/ObjectTypesEnum';
 import { HandTools } from '../../_enums/HandToolsEnum';
 
@@ -41,7 +40,6 @@ export function SceneNode({ id }) {
                     rotation={rot}
                     scale={scl}
                     visible={obj.visible}
-                    name={obj.name}
                     userData={{ isLocked: obj.locked }}
                     onPointerDown={handlePointerDown}
                 >

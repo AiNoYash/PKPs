@@ -1,6 +1,6 @@
 import "./SceneOverlay.css"
 import { HandIcon, ScaleIcon, RotateIcon, TranslateIcon } from "./SceneIcons"
-import { useStore } from "zustand";
+import { useStore } from "../../context/useStore";
 
 export function SceneOverlay() {
 

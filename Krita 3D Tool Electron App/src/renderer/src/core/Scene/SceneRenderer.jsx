@@ -1,6 +1,5 @@
-import { useStore } from "zustand";
+import { useStore } from "../../context/useStore";
 import { SceneNode } from "./SceneNode";
-
 
 export function SceneRenderer() {
     const rootObjectIds = useStore((state) => state.rootObjectIds);
