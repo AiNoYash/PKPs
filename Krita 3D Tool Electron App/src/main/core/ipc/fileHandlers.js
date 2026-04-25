@@ -46,20 +46,21 @@ const {
   openProject,
   readProjectJson,
   saveProjectJson,
-} = require("../services/ProjectService");
+} = require("../services/ProjectService.js");
 const {
   importAsset,
   deleteAsset,
   getAssetPath,
   determineAssetType,
-} = require("../services/AssetService");
+} = require("../services/AssetService.js");
 const {
   createScene,
   saveScene,
   loadScene,
   deleteScene,
   renameScene,
-} = require("../services/SceneService");
+} = require("../services/SceneService.js");
+const { buildDirectoryTree } = require("../services/DirectoryTreeService.js");
 
 // -----------------------------------------------------------------------------
 // SESSION STATE
@@ -187,6 +188,41 @@ ipcMain.handle("project:getManifest", async () => {
       success: false,
       manifest: null,
       error: `Failed to read project manifest. Reason: ${err.message}`,
+    };
+  }
+});
+
+// -----------------------------------------------------------------------------
+// "project:getDirectoryTree"
+//
+// Scans the active project folder on disk and returns a fully nested tree
+// object representing the project's file/folder structure. .meta files are
+// automatically excluded. Each file node includes its GUID from the table.
+//
+// Called by the Project panel (Project.jsx) on mount and whenever the
+// frontend needs to refresh the directory view (e.g. after an import).
+//
+// Expected args from frontend: none
+//
+// Returns:
+//   {
+//     success:  boolean,
+//     tree:     object|null,  — The full nested directory tree object
+//     error:    string|null
+//   }
+// -----------------------------------------------------------------------------
+ipcMain.handle("project:getDirectoryTree", async () => {
+  const guard = _requireActiveProject();
+  if (guard) return guard;
+
+  try {
+    const tree = buildDirectoryTree(activeProjectPath, activeTable);
+    return { success: true, tree, error: null };
+  } catch (err) {
+    return {
+      success: false,
+      tree: null,
+      error: `Failed to build directory tree. Reason: ${err.message}`,
     };
   }
 });

@@ -6,6 +6,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import { ipcMain } from 'electron';
 import { setupStoreHandlers } from './core/store';
 import { setupProjectHandlers } from './core/fs';
+import "./core/ipc/fileHandlers.js";
 
 let mainWindow = null;
 

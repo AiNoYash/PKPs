@@ -6,8 +6,8 @@
 
 const fs = require("fs");
 const path = require("path");
-const { generateGuid } = require("./GuidService");
-const { loadTable, saveTable } = require("./GuidTableService");
+const { generateGuid } = require("./GuidService.js");
+const { loadTable, saveTable } = require("./GuidTableService.js");
 
 const PROJECT_FILENAME = "project.json";
 const GUID_TABLE_FILENAME = "guid-table.json";

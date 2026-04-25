@@ -33,15 +33,15 @@
 
 const fs = require("fs");
 const path = require("path");
-const { generateGuid } = require("./GuidService");
-const { createMeta, readMeta, deleteMeta, metaExistsFor, getMetaPath } = require("./MetaService");
+const { generateGuid } = require("./GuidService.js");
+const { createMeta, readMeta, deleteMeta, metaExistsFor, getMetaPath } = require("./MetaService.js");
 const {
   addEntry,
   removeEntry,
   getEntry,
   toRelativePath,
   toAbsolutePath,
-} = require("./GuidTableService");
+} = require("./GuidTableService.js");
 
 // -----------------------------------------------------------------------------
 // CONSTANTS

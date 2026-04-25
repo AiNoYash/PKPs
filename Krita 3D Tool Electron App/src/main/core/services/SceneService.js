@@ -16,8 +16,8 @@
 
 const fs = require("fs");
 const path = require("path");
-const { generateGuid } = require("./GuidService");
-const { createMeta, deleteMeta } = require("./MetaService");
+const { generateGuid } = require("./GuidService.js");
+const { createMeta, deleteMeta } = require("./MetaService.js");
 const {
   addEntry,
   removeEntry,
@@ -25,8 +25,8 @@ const {
   saveTable,
   toRelativePath,
   toAbsolutePath,
-} = require("./GuidTableService");
-const { readProjectJson, saveProjectJson } = require("./ProjectService");
+} = require("./GuidTableService.js");
+const { readProjectJson, saveProjectJson } = require("./ProjectService.js");
 
 const SCENES_FOLDER = "scenes";
 

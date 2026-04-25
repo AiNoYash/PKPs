@@ -20,8 +20,8 @@
 
 const fs = require("fs");
 const path = require("path");
-const { generateGuid } = require("./GuidService");
-const { createMeta, deleteMeta } = require("./MetaService");
+const { generateGuid } = require("./GuidService.js");
+const { createMeta, deleteMeta } = require("./MetaService.js");
 const {
   addEntry,
   removeEntry,
@@ -29,7 +29,7 @@ const {
   saveTable,
   toRelativePath,
   toAbsolutePath,
-} = require("./GuidTableService");
+} = require("./GuidTableService.js");
 
 // Maps asset types to their destination subfolders inside the project.
 const ASSET_TYPE_FOLDER_MAP = {

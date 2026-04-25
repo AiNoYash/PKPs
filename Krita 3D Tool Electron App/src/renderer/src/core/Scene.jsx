@@ -11,8 +11,11 @@ import { HandTools } from '../_enums/HandToolsEnum';
 
 export function Scene() {
 
-    const { selectedHandTool, selectHandTool } = useStore((state) => ({ selectedHandTool: state.selectedHandTool, selectHandTool: state.selectHandTool }));
+    const selectedHandTool = useStore((state) => (state.selectedHandTool));
+    const selectHandTool  = useStore((state) => (state.selectHandTool));
     
+
+    // selectHandTool
     const orbitRef = useRef(null);
 
     return (
