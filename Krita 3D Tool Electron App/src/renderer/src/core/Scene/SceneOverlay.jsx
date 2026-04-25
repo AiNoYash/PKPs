@@ -1,10 +1,13 @@
 import "./SceneOverlay.css"
 import { HandIcon, ScaleIcon, RotateIcon, TranslateIcon } from "./SceneIcons"
 import { useStore } from "../../context/useStore";
+import { HandTools } from "../../_enums/HandToolsEnum";
+
 
 export function SceneOverlay() {
 
-    const selectedHandTool = useStore((state) => state.selectHandTool);
+    const selectedHandTool = useStore((state) => state.selectedHandTool);
+    const selectHandTool = useStore((state) => state.selectHandTool);
 
 
     return (

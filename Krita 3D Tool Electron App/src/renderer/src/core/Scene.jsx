@@ -4,6 +4,7 @@ import { useStore } from "../context/useStore";
 import * as THREE from 'three';
 import { useRef } from 'react';
 
+import { SceneOverlay } from './Scene/SceneOverlay';
 
 import { HandTools } from '../_enums/HandToolsEnum';
 import { SceneTransformController } from './Scene/SceneTransformController';
@@ -11,12 +12,15 @@ import { SceneRenderer } from './Scene/SceneRenderer';
 
 export function Scene() {
 
-    const { selectedHandTool, selectHandTool } = useStore((state) => ({ selectedHandTool: state.selectedHandTool, selectHandTool: state.selectHandTool }));
+    const selectedHandTool = useStore((state) => state.selectedHandTool);
+    const selectHandTool = useStore((state) => state.selectHandTool);
+
     const orbitRef = useRef(null);
 
     return (
         <>
             <div className='docker-content-container'>
+                <SceneOverlay />
                 <Canvas>
                     <color attach="background" args={['#1e1e1e']} />
 
@@ -47,7 +51,7 @@ export function Scene() {
                         }}
                         enabled={selectedHandTool === HandTools.PAN} // ! This could get overriden by some weird component updating default oribitcontrols' threejs state without chaning react state  
                     />
-
+                    
                     <directionalLight position={[5, 10, 5]} intensity={1} />
                     <ambientLight intensity={0.4} />
 
