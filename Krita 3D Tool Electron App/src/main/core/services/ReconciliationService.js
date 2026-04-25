@@ -2,15 +2,6 @@
 // Responsible for the 3-pass startup reconciliation scan that synchronises
 // the in-memory GUID table with the actual state of files on disk.
 //
-// This runs automatically every time a project is opened (called from
-// ProjectService.openProject). It handles all the cases where the user may
-// have modified the project folder contents outside the app while it was closed:
-//
-//   - User deleted a file (and possibly its meta)
-//   - User added a new file from outside the app
-//   - Meta file was left behind after a file was deleted
-//   - GUID table entry was lost but the meta file still exists
-//
 // THE 3-PASS STRATEGY:
 //   Pass 1 — Validate every existing entry in the GUID table.
 //             Remove stale entries whose files or metas are gone.
@@ -22,33 +13,24 @@
 // FOLDER SCOPE:
 //   The scan covers:  assets/models, assets/textures, assets/krita, scenes/
 //   The scan ignores: exports/  (exports are not tracked assets)
-//
-// Dependencies:
-//   - Node.js built-in 'fs'    (file system operations)
-//   - Node.js built-in 'path'  (path construction)
-//   - GuidService              (GUID generation for newly discovered files)
-//   - MetaService              (reading, creating, and deleting meta files)
-//   - GuidTableService         (table mutation and path utilities)
 // =============================================================================
 
-const fs = require("fs");
-const path = require("path");
-const { generateGuid } = require("./GuidService");
-const { createMeta, readMeta, deleteMeta, metaExistsFor, getMetaPath } = require("./MetaService");
-const {
+import fs from "fs";
+import path from "path";
+import { generateGuid } from "./GuidService.js";
+import { createMeta, readMeta, deleteMeta, metaExistsFor, getMetaPath } from "./MetaService.js";
+import {
   addEntry,
   removeEntry,
   getEntry,
   toRelativePath,
   toAbsolutePath,
-} = require("./GuidTableService");
+} from "./GuidTableService.js";
 
 // -----------------------------------------------------------------------------
 // CONSTANTS
 // -----------------------------------------------------------------------------
 
-// Folders to include in the reconciliation scan (relative to project root).
-// exports/ is intentionally excluded — rendered PNGs are not tracked assets.
 const TRACKED_FOLDERS = [
   "assets/models",
   "assets/textures",
@@ -406,7 +388,7 @@ const reconcile = (projectPath, table) => {
   return table;
 };
 
-module.exports = {
+export {
   buildFileSets,
   reconcile,
 };

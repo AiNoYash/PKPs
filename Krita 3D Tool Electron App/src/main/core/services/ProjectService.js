@@ -4,10 +4,11 @@
 // manifest file.
 // =============================================================================
 
-const fs = require("fs");
-const path = require("path");
-const { generateGuid } = require("./GuidService");
-const { loadTable, saveTable } = require("./GuidTableService");
+import fs from "fs";
+import path from "path";
+import { generateGuid } from "./GuidService.js";
+import { loadTable, saveTable } from "./GuidTableService.js";
+import { reconcile } from "./ReconciliationService.js";
 
 const PROJECT_FILENAME = "project.json";
 const GUID_TABLE_FILENAME = "guid-table.json";
@@ -267,8 +268,6 @@ const openProject = (projectPath) => {
     let table = loadTable(projectPath);
 
     // Step 5 — Run the 3-pass reconciliation.
-    // Required lazily here to avoid circular dependency at module load time.
-    const { reconcile } = require("./ReconciliationService");
     table = reconcile(projectPath, table);
 
     // Step 6 — Persist the reconciled table to disk.
@@ -293,7 +292,7 @@ const openProject = (projectPath) => {
   }
 };
 
-module.exports = {
+export {
   createProject,
   readProjectJson,
   saveProjectJson,

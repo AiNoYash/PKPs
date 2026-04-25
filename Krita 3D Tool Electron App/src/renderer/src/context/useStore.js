@@ -5,6 +5,8 @@ import { GeometryTypes } from '../_enums/GeometryTypesEnum';
 import { MaterialTypes } from '../_enums/MaterialTypesEnum';
 
 export const useStore = create((set) => ({
+    activeProjectPath: null,
+    setActiveProjectPath: (path) => set({ activeProjectPath: path }),
 
     selectedHandTool: HandTools.PAN,
     selectHandTool: (handTool) => { set({ selectedHandTool: handTool }); },

@@ -1,16 +1,4 @@
 // =============================================================================
-// The IPC bridge between the Electron frontend (React/Zustand) and the
-// backend file management services.
-//
-// This file registers all ipcMain handlers that the frontend can invoke via
-// ipcRenderer.invoke(). Each handler receives arguments from the frontend,
-// calls the appropriate service function, and returns a result object back.
-//
-// ARCHITECTURE NOTE:
-//   This file does NOT contain any business logic. It is purely a routing
-//   layer — every handler delegates immediately to a service function.
-//   All actual logic lives in the service modules.
-//
 // SESSION STATE:
 //   Two session-level variables are maintained here for the duration of the
 //   app's runtime:
@@ -18,55 +6,32 @@
 //                                         open project folder.
 //     - activeTable       {object|null} — The in-memory GUID table for the
 //                                         currently open project.
-//
-//   These are reset to null whenever no project is open, and populated
-//   whenever a project is created or opened. Every handler that needs them
-//   checks for null and returns a clean error if called out of context.
-//
-// IPC CHANNEL NAMING CONVENTION:
-//   All channels follow the pattern "domain:action":
-//     project:create      asset:import
-//     project:open        asset:delete
-//     scene:create        asset:getPath
-//     scene:save          asset:determineType
-//     scene:load
-//     scene:delete
-//     scene:rename
-//
-// Dependencies:
-//   - Electron's ipcMain
-//   - ProjectService
-//   - AssetService
-//   - SceneService
 // =============================================================================
 
-const { ipcMain } = require("electron");
-const {
-  createProject,
-  openProject,
-  readProjectJson,
-  saveProjectJson,
-} = require("../services/ProjectService");
-const {
-  importAsset,
-  deleteAsset,
-  getAssetPath,
-  determineAssetType,
-} = require("../services/AssetService");
-const {
-  createScene,
-  saveScene,
-  loadScene,
-  deleteScene,
-  renameScene,
-} = require("../services/SceneService");
+import { ipcMain } from "electron";
+import { 
+  createProject, 
+  openProject, 
+  readProjectJson, 
+  saveProjectJson 
+} from "../services/ProjectService.js";
+import { 
+  importAsset, 
+  deleteAsset, 
+  getAssetPath, 
+  determineAssetType 
+} from "../services/AssetService.js";
+import { 
+  createScene, 
+  saveScene, 
+  loadScene, 
+  deleteScene, 
+  renameScene 
+} from "../services/SceneService.js";
+import { buildDirectoryTree } from "../services/DirectoryTreeService.js";
 
 // -----------------------------------------------------------------------------
-// SESSION STATE
-//
-// These two variables represent the currently open project for the lifetime
-// of the Electron app session. They are the single source of truth on the
-// backend side for "what project is open right now".
+// SESSION STATE VARIABLES
 // -----------------------------------------------------------------------------
 let activeProjectPath = null;
 let activeTable = null;
@@ -187,6 +152,41 @@ ipcMain.handle("project:getManifest", async () => {
       success: false,
       manifest: null,
       error: `Failed to read project manifest. Reason: ${err.message}`,
+    };
+  }
+});
+
+// -----------------------------------------------------------------------------
+// "project:getDirectoryTree"
+//
+// Scans the active project folder on disk and returns a fully nested tree
+// object representing the project's file/folder structure. .meta files are
+// automatically excluded. Each file node includes its GUID from the table.
+//
+// Called by the Project panel (Project.jsx) on mount and whenever the
+// frontend needs to refresh the directory view (e.g. after an import).
+//
+// Expected args from frontend: none
+//
+// Returns:
+//   {
+//     success:  boolean,
+//     tree:     object|null,  — The full nested directory tree object
+//     error:    string|null
+//   }
+// -----------------------------------------------------------------------------
+ipcMain.handle("project:getDirectoryTree", async () => {
+  const guard = _requireActiveProject();
+  if (guard) return guard;
+
+  try {
+    const tree = buildDirectoryTree(activeProjectPath, activeTable);
+    return { success: true, tree, error: null };
+  } catch (err) {
+    return {
+      success: false,
+      tree: null,
+      error: `Failed to build directory tree. Reason: ${err.message}`,
     };
   }
 });
@@ -413,12 +413,10 @@ ipcMain.handle("asset:getPath", async (_event, { guid }) => {
 //     // ... create BrowserWindow, etc.
 //   });
 // -----------------------------------------------------------------------------
-const registerFileHandlers = () => {
+export const registerFileHandlers = () => {
   // All handlers are registered at module load time via the ipcMain.handle()
   // calls above. This function's purpose is to give the main process a clean,
   // explicit entry point to initialise this module — and serves as a natural
   // place to add any future setup logic (e.g. logging, handler validation).
   console.log("[fileHandlers] All IPC file handlers registered successfully.");
 };
-
-module.exports = { registerFileHandlers };

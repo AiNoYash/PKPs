@@ -13,9 +13,11 @@ import { Suspense } from 'react';
 
 export function Scene() {
 
-    const selectedHandTool = useStore((state) => state.selectedHandTool);
-    const selectHandTool = useStore((state) => state.selectHandTool);
+    const selectedHandTool = useStore((state) => (state.selectedHandTool));
+    const selectHandTool  = useStore((state) => (state.selectHandTool));
+    
 
+    // selectHandTool
     const orbitRef = useRef(null);
 
     return (

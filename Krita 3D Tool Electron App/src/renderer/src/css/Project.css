@@ -1,0 +1,231 @@
+/* =============================================================================
+   Project.css
+   Styles for the Project panel — 2-column layout with a left folder tree
+   and a right icon grid. Designed to match the dark Unity-like aesthetic
+   visible in the rest of the application UI.
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   PANEL ROOT — the full Project panel container
+   Fills the entire flexlayout-react tab area assigned to the Project panel.
+----------------------------------------------------------------------------- */
+.project-panel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background-color: #1e1e1e;
+    color: #cccccc;
+    font-family: "Segoe UI", "SF Pro Text", sans-serif;
+    font-size: 12px;
+    overflow: hidden;
+    user-select: none;
+  }
+  
+  /* -----------------------------------------------------------------------------
+     2-COLUMN BODY — left tree + right grid side by side
+  ----------------------------------------------------------------------------- */
+  .project-panel-body {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    overflow: hidden;
+  }
+  
+  /* -----------------------------------------------------------------------------
+     LEFT PANEL — folder tree
+  ----------------------------------------------------------------------------- */
+  .project-tree {
+    width: 220px;
+    min-width: 160px;
+    max-width: 320px;
+    height: 100%;
+    background-color: #252525;
+    border-right: 1px solid #333333;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 4px 0;
+    flex-shrink: 0;
+  }
+  
+  /* Scrollbar styling to match dark theme */
+  .project-tree::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .project-tree::-webkit-scrollbar-track {
+    background: #252525;
+  }
+  
+  .project-tree::-webkit-scrollbar-thumb {
+    background-color: #444444;
+    border-radius: 3px;
+  }
+  
+  /* -----------------------------------------------------------------------------
+     TREE NODE ROW — each clickable folder row in the left panel
+  ----------------------------------------------------------------------------- */
+  .tree-node-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    height: 24px;
+    padding-right: 8px;
+    cursor: pointer;
+    border-radius: 3px;
+    margin: 1px 4px;
+    white-space: nowrap;
+    transition: background-color 0.1s ease;
+  }
+  
+  .tree-node-row:hover {
+    background-color: #2e2e2e;
+  }
+  
+  .tree-node-row--selected {
+    background-color: #1a3a5c;
+  }
+  
+  .tree-node-row--selected:hover {
+    background-color: #1e4570;
+  }
+  
+  /* The › expand/collapse arrow character */
+  .tree-node-arrow {
+    display: inline-block;
+    width: 12px;
+    font-size: 12px;
+    color: #777777;
+    text-align: center;
+    transition: transform 0.15s ease;
+    flex-shrink: 0;
+  }
+  
+  .tree-node-arrow--expanded {
+    transform: rotate(90deg);
+  }
+  
+  .tree-node-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  
+  .tree-node-label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #cccccc;
+    font-size: 12px;
+  }
+  
+  /* -----------------------------------------------------------------------------
+     RIGHT PANEL — icon grid
+  ----------------------------------------------------------------------------- */
+  .project-grid {
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px 8px;
+  
+    /* Responsive grid — tiles wrap naturally as the panel is resized */
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 4px;
+  }
+  
+  /* Scrollbar styling to match dark theme */
+  .project-grid::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .project-grid::-webkit-scrollbar-track {
+    background: #1e1e1e;
+  }
+  
+  .project-grid::-webkit-scrollbar-thumb {
+    background-color: #444444;
+    border-radius: 3px;
+  }
+  
+  /* -----------------------------------------------------------------------------
+     GRID TILE — individual icon tile for a file or folder in the right panel
+  ----------------------------------------------------------------------------- */
+  .grid-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 80px;
+    height: 90px;
+    padding: 8px 4px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background-color 0.1s ease, border-color 0.1s ease;
+    gap: 6px;
+    box-sizing: border-box;
+  }
+  
+  .grid-tile:hover {
+    background-color: #2a2a2a;
+    border-color: #3a3a3a;
+  }
+  
+  .grid-tile:active {
+    background-color: #1a3a5c;
+    border-color: #2a5a8c;
+  }
+  
+  .grid-tile-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+  }
+  
+  .grid-tile-label {
+    font-size: 11px;
+    color: #bbbbbb;
+    text-align: center;
+    line-height: 1.3;
+    word-break: break-word;
+    max-width: 100%;
+  
+    /* Clamp to 2 lines max, show ellipsis on overflow */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  /* Slightly brighter label for folder tiles */
+  .grid-tile--folder .grid-tile-label {
+    color: #cccccc;
+  }
+  
+  /* -----------------------------------------------------------------------------
+     EMPTY / PLACEHOLDER STATES
+     Shared by both .project-tree and .project-grid when there is nothing to show.
+  ----------------------------------------------------------------------------- */
+  .project-tree--empty,
+  .project-grid--empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+  }
+  
+  .project-panel-placeholder {
+    color: #555555;
+    font-size: 12px;
+    text-align: center;
+    padding: 16px;
+    line-height: 1.6;
+  }

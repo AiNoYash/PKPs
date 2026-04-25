@@ -18,18 +18,18 @@
 //   8. Return the GUID to the caller (frontend uses it to add the object to scene).
 // =============================================================================
 
-const fs = require("fs");
-const path = require("path");
-const { generateGuid } = require("./GuidService");
-const { createMeta, deleteMeta } = require("./MetaService");
-const {
+import fs from "fs";
+import path from "path";
+import { generateGuid } from "./GuidService.js";
+import { createMeta, deleteMeta } from "./MetaService.js";
+import {
   addEntry,
   removeEntry,
   getEntry,
   saveTable,
   toRelativePath,
   toAbsolutePath,
-} = require("./GuidTableService");
+} from "./GuidTableService.js";
 
 // Maps asset types to their destination subfolders inside the project.
 const ASSET_TYPE_FOLDER_MAP = {
@@ -339,7 +339,7 @@ const getAssetPath = (projectPath, guid, table) => {
   };
 };
 
-module.exports = {
+export {
   determineAssetType,
   determineDestinationFolder,
   importAsset,

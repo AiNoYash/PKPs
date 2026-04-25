@@ -15,8 +15,8 @@
 //     saveTable(projectPath, table);              // write once to disk
 // =============================================================================
 
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
 // The name of the GUID table file inside every project folder.
 const GUID_TABLE_FILENAME = "guid-table.json";
@@ -205,7 +205,7 @@ const toAbsolutePath = (projectPath, relativePath) => {
   return path.resolve(projectPath, relativePath);
 };
 
-module.exports = {
+export {
   loadTable,
   saveTable,
   addEntry,

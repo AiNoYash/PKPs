@@ -7,3 +7,9 @@ contextBridge.exposeInMainWorld('Application', {
   openDirectoryDialog: () => ipcRenderer.invoke('dialog:openDirectory'),
   system: process.platform
 });
+
+contextBridge.exposeInMainWorld('Project', {
+  // Generic invoke — used by the Project panel and any future IPC calls
+  // that don't need a dedicated wrapper here.
+  invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
+});
