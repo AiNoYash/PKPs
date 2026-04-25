@@ -16,7 +16,8 @@ import {
   saveProjectJson 
 } from "../services/ProjectService.js";
 import { 
-  importAsset, 
+  importAsset,
+  renameAsset,
   deleteAsset, 
   getAssetPath, 
   determineAssetType 
@@ -350,6 +351,27 @@ ipcMain.handle("asset:import", async (_event, { sourcePath, type, name }) => {
 
   const result = importAsset(activeProjectPath, sourcePath, type, name, activeTable);
 
+  return result;
+});
+
+// -----------------------------------------------------------------------------
+// "asset:rename"
+//
+// Renames a tracked asset file on disk and updates the GUID table entry.
+// The file extension is preserved — only the base name changes.
+// Scene files must use scene:rename instead (they have extra manifest steps).
+//
+// Expected args from frontend:
+//   { guid: string, newName: string }
+//
+// Returns: { success: boolean, error: string|null }
+// -----------------------------------------------------------------------------
+ipcMain.handle("asset:rename", async (_event, { guid, newName }) => {
+  const guard = _requireActiveProject();
+  if (guard) return guard;
+ 
+  const result = renameAsset(activeProjectPath, guid, newName, activeTable);
+ 
   return result;
 });
 
