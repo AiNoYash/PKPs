@@ -68,13 +68,8 @@ export const useStore = create((set) => ({
     }),
 
 
-    addObject: (newObj) => set((state) => ({
-        rootObjectIds: [...state.rootObjectIds, newObj.id],
-        objects: { ...state.objects, [newObj.id]: newObj }
-    })),
-
     addGroup: (name = 'Empty Group', parentId = null) => set((state) => {
-        const newId = `group-${Date.now()}`;
+        const newId = Date.now().toString();
 
         const newGroup = {
             id: newId,
@@ -104,6 +99,9 @@ export const useStore = create((set) => ({
             newRootObjectIds.push(newId);
         }
     }),
+
+
+    
 
 
     toggleVisibility: (id) => set((state) => {

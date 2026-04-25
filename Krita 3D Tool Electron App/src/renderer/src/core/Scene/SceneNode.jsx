@@ -33,6 +33,9 @@ export function SceneNode({ id }) {
 
     switch (obj.type) {
         case ObjectTypes.GROUP:
+
+
+        
             return (
                 <group
                     name={id}
@@ -46,6 +49,12 @@ export function SceneNode({ id }) {
                     {renderChildren()}
                 </group>
             );
+        case ObjectTypes.THREE_D:
+
+        return(
+            <>
+            </>
+        )
 
         default:
             return null;

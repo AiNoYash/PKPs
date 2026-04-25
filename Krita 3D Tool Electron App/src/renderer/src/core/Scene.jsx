@@ -10,6 +10,7 @@ import { HandTools } from '../_enums/HandToolsEnum';
 import { SceneTransformController } from './Scene/SceneTransformController';
 import { SceneRenderer } from './Scene/SceneRenderer';
 
+
 export function Scene() {
 
     const selectedHandTool = useStore((state) => state.selectedHandTool);
@@ -51,12 +52,15 @@ export function Scene() {
                         }}
                         enabled={selectedHandTool === HandTools.PAN} // ! This could get overriden by some weird component updating default oribitcontrols' threejs state without chaning react state  
                     />
-                    
+
                     <directionalLight position={[5, 10, 5]} intensity={1} />
                     <ambientLight intensity={0.4} />
 
-                    <SceneTransformController />
-                    <SceneRenderer />
+
+                    {/* <Suspense fallback={null}> */}
+                        <SceneRenderer />
+                        <SceneTransformController />
+                    {/* </Suspense> */}
 
                 </Canvas>
             </div>

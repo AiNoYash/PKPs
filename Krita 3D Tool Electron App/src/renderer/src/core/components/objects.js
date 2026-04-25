@@ -1,26 +1,86 @@
-const tempObj = {
-    id: 'primitive-123',
-    name: 'Cube 1',
-    type: ObjectTypes.THREE_D, // From your enum
-    visible: true,
-    locked: false,
-    parentId: null,
-    childrenIds: [],
-    transform: {
-        position: { x: 0, y: 0, z: 0 },
-        rotation: { x: 0, y: 0, z: 0 },
-        scale: { x: 1, y: 1, z: 1 }
+const meshStandardMaterialTemplate = {
+    materialProps: {
+        // 1. Base Colors
+        color: '#ffffff',
+        emissive: '#000000',
+        emissiveIntensity: 1,
+
+        // 2. PBR Core
+        roughness: 1,
+        metalness: 0,
+
+        // 3. Transparency
+        transparent: false,
+        opacity: 1,
+        alphaTest: 0,
+
+        // 4. Rendering
+        wireframe: false,
+        flatShading: false,
+        side: 'FrontSide' // Crucial for toggling DoubleSide on 2D planes
     },
-    // ---- NEW MESH SPECIFIC PROPERTIES ----
-    meshData: {
-        geometryType: 'Box',       // 'Box', 'Sphere', 'Plane', 'Cylinder', etc.
-        geometryArgs: [1, 1, 1],   // The args passed to the geometry (width, height, depth)
-        materialType: 'Standard',  // 'Standard', 'Basic', etc.
-        materialProps: {           // The JSON properties for the material
-            color: '#ffffff',
-            wireframe: false,
-            opacity: 1,
-            transparent: false
-        }
+    textureMaps: {
+        map: null,           // Base image
+        alphaMap: null,      // Cutout/transparency map
+        normalMap: null,     // Standard bumpiness
+        roughnessMap: null,  // Shiny vs dull areas
+        metalnessMap: null,  // Metallic areas
+        emissiveMap: null    // Glowing areas
+    }
+}
+
+
+const meshBasicMaterialTemplate = {
+    materialProps: {
+        // 1. Base Color
+        color: '#ffffff',
+
+        // 2. Transparency
+        transparent: true,
+        opacity: 1,
+        alphaTest: 0, // Useful for hard-edged cutouts (like pixel art)
+
+        // 3. Rendering
+        wireframe: false,
+        side: 'DoubleSide' // Crucial so Krita planes don't disappear from behind
+    },
+    textureMaps: {
+        map: null,      // Base image (Your Krita layer export)
+        alphaMap: null  // Separate transparency cutout image
+    }
+}
+
+
+const meshPhysicalMaterialTemplate = {
+    materialProps: {
+        // 1. Base Colors
+        color: '#ffffff',
+        emissive: '#000000',
+        emissiveIntensity: 1,
+
+        // 2. PBR Core
+        roughness: 1,
+        metalness: 0,
+
+        // 3. Clearcoat (Wet look, varnished wood, car paint)
+        clearcoat: 0,
+        clearcoatRoughness: 0,
+
+        // 4. Transmission (Solid glass, water, ice)
+        transmission: 0,
+        ior: 1.5, // 1.33 for water, 1.5 for glass
+        thickness: 0, 
+
+        // 5. Transparency & Rendering
+        transparent: false,
+        opacity: 1,
+        side: 'FrontSide'
+    },
+    textureMaps: {
+        map: null,          // Base image
+        alphaMap: null,     // Cutouts
+        normalMap: null,    // Bumps and dents
+        roughnessMap: null, // Shiny vs dull areas
+        metalnessMap: null  // Metallic areas
     }
 }
