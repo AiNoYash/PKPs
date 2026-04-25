@@ -10,6 +10,8 @@ export const useStore = create((set) => ({
 
 
     selectedObjectId: null,
+    selectObject: (id) => set({ selectedObjectId: id }),
+    
     rootObjectIds: ['1', '2'],
 
     objects: {
@@ -44,7 +46,6 @@ export const useStore = create((set) => ({
         }
     },
 
-    selectObject: (id) => set({ selectedObjectId: id }),
 
     updateTransform: (id, partialTransform) => set((state) => {
         const obj = state.objects[id];
@@ -68,38 +69,10 @@ export const useStore = create((set) => ({
     }),
 
 
-    addGroup: (name = 'Empty Group', parentId = null) => set((state) => {
-        const newId = Date.now().toString();
-
-        const newGroup = {
-            id: newId,
-            name: name,
-            type: ObjectTypes.GROUP,
-            parentId: parentId,
-            childrenIds: [],
-            visible: true,
-            locked: false,
-            transform: {
-                position: { x: 0, y: 0, z: 0 },
-                rotation: { x: 0, y: 0, z: 0 },
-                scale: { x: 1, y: 1, z: 1 }
-            }
-        };
-
-        const newObjects = { ...state.objects, [newId]: newGroup };
-        const newRootObjectIds = [...state.rootObjectIds];
-
-
-        if (parentId && newObjects[parentId]) {
-            newObjects[parentId] = {
-                ...newObjects[parentId],
-                childrenIds: [...newObjects[parentId].childrenIds, newId]
-            };
-        } else {
-            newRootObjectIds.push(newId);
-        }
-    }),
-
+    addRootObject: (newObj) => set((state) => ({
+        rootObjectIds: [...state.rootObjectIds, newObj.id],
+        objects: { ...state.objects, [newObj.id]: newObj }
+    })),
 
     
 

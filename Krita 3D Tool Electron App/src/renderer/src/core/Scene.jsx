@@ -9,7 +9,7 @@ import { SceneOverlay } from './Scene/SceneOverlay';
 import { HandTools } from '../_enums/HandToolsEnum';
 import { SceneTransformController } from './Scene/SceneTransformController';
 import { SceneRenderer } from './Scene/SceneRenderer';
-
+import { Suspense } from 'react';
 
 export function Scene() {
 
@@ -57,10 +57,10 @@ export function Scene() {
                     <ambientLight intensity={0.4} />
 
 
-                    {/* <Suspense fallback={null}> */}
+                    <Suspense fallback={null}>
                         <SceneRenderer />
                         <SceneTransformController />
-                    {/* </Suspense> */}
+                    </Suspense>
 
                 </Canvas>
             </div>
