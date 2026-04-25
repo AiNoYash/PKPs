@@ -1,3 +1,5 @@
+import { MaterialSides } from "../_enums/MaterialSidesEnum";
+
 export const MaterialFactory = {
     meshStandardMaterialTemplate: {
         materialProps: {
@@ -11,7 +13,7 @@ export const MaterialFactory = {
             alphaTest: 0,
             wireframe: false,
             flatShading: false,
-            side: 'FrontSide'
+            side: MaterialSides.DOUBLE
         },
         textureMaps: {
             map: null,
@@ -35,7 +37,7 @@ export const MaterialFactory = {
 
             // 3. Rendering
             wireframe: false,
-            side: 'DoubleSide' // Crucial so Krita planes don't disappear from behind
+            side: MaterialSides.DOUBLE // Crucial so Krita planes don't disappear from behind
         },
         textureMaps: {
             map: null,      // Base image (Your Krita layer export)
@@ -66,7 +68,7 @@ export const MaterialFactory = {
             // 5. Transparency & Rendering
             transparent: false,
             opacity: 1,
-            side: 'FrontSide'
+            side: MaterialSides.DOUBLE
         },
         textureMaps: {
             map: null,          // Base image
