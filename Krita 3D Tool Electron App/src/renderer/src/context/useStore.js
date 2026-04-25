@@ -6,6 +6,9 @@ export const useStore = create((set) => ({
     activeProjectPath: null,
     setActiveProjectPath: (path) => set({ activeProjectPath: path }),
 
+    treeRefreshCounter: 0,
+    triggerTreeRefresh: () => set((state) => ({ treeRefreshCounter: state.treeRefreshCounter + 1 })),
+
     selectedHandTool: HandTools.PAN,
     selectHandTool: (handTool) => { set({ selectedHandTool: handTool }); },
 
