@@ -39,6 +39,7 @@ export const Project = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const activeProjectPath = useStore((state) => state.activeProjectPath);
+  const treeRefreshCounter = useStore((state) => state.treeRefreshCounter);
 
   // ---------------------------------------------------------------------------
   // fetchDirectoryTree
@@ -88,7 +89,7 @@ export const Project = () => {
   // Fetch the tree when the component first mounts.
   useEffect(() => {
     fetchDirectoryTree();
-  }, [fetchDirectoryTree, activeProjectPath]);
+  }, [fetchDirectoryTree, activeProjectPath, treeRefreshCounter]);
 
   // ---------------------------------------------------------------------------
   // handleFolderSelect
