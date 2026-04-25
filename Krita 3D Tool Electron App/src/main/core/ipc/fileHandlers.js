@@ -1,16 +1,4 @@
 // =============================================================================
-// The IPC bridge between the Electron frontend (React/Zustand) and the
-// backend file management services.
-//
-// This file registers all ipcMain handlers that the frontend can invoke via
-// ipcRenderer.invoke(). Each handler receives arguments from the frontend,
-// calls the appropriate service function, and returns a result object back.
-//
-// ARCHITECTURE NOTE:
-//   This file does NOT contain any business logic. It is purely a routing
-//   layer — every handler delegates immediately to a service function.
-//   All actual logic lives in the service modules.
-//
 // SESSION STATE:
 //   Two session-level variables are maintained here for the duration of the
 //   app's runtime:
@@ -18,26 +6,6 @@
 //                                         open project folder.
 //     - activeTable       {object|null} — The in-memory GUID table for the
 //                                         currently open project.
-//
-//   These are reset to null whenever no project is open, and populated
-//   whenever a project is created or opened. Every handler that needs them
-//   checks for null and returns a clean error if called out of context.
-//
-// IPC CHANNEL NAMING CONVENTION:
-//   All channels follow the pattern "domain:action":
-//     project:create      asset:import
-//     project:open        asset:delete
-//     scene:create        asset:getPath
-//     scene:save          asset:determineType
-//     scene:load
-//     scene:delete
-//     scene:rename
-//
-// Dependencies:
-//   - Electron's ipcMain
-//   - ProjectService
-//   - AssetService
-//   - SceneService
 // =============================================================================
 
 import { ipcMain } from "electron";
@@ -63,11 +31,7 @@ import {
 import { buildDirectoryTree } from "../services/DirectoryTreeService.js";
 
 // -----------------------------------------------------------------------------
-// SESSION STATE
-//
-// These two variables represent the currently open project for the lifetime
-// of the Electron app session. They are the single source of truth on the
-// backend side for "what project is open right now".
+// SESSION STATE VARIABLES
 // -----------------------------------------------------------------------------
 let activeProjectPath = null;
 let activeTable = null;

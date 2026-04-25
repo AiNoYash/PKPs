@@ -43,9 +43,19 @@ const handleOpenProject = async () => {
     }
 };
 
+const handleFileImport = async () => {
+    // 1. Open the native file picker
+    const filePath = await invoke('dialog:openFileImport');
+
+    if (!filePath) return; // User canceled
+
+    console.log("file path: ",filePath);
+}
+
 export const fileMenuItems = [
     { label: 'New Project...', shortcut: 'Ctrl+Shift+N', action: handleNewProject },
     { label: 'Open Project...', shortcut: 'Ctrl+O', action: handleOpenProject },
+    { label: 'Import File...', shortcut: 'Ctrl+I', action: handleFileImport },
     { type: 'divider' },
     { label: 'Save', shortcut: 'Ctrl+S', action: () => console.log('Saved') },
     { label: 'Save As...', shortcut: 'Ctrl+Shift+S', action: () => console.log('Saved As') },
