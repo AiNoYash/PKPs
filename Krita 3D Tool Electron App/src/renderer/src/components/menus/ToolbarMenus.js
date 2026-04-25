@@ -1,3 +1,5 @@
+import { useStore } from "../../context/useStore.js";
+
 const { invoke } = window.Project;
 
 const handleNewProject = async () => {
@@ -16,8 +18,8 @@ const handleNewProject = async () => {
 
     if (createResult.success) {
         console.log("Project created successfully!");
-        // TODO: Update your Zustand store here to set the active project
-        // useStore.getState().setProject(createResult);
+        // Update store with the new project path
+        useStore.getState().setActiveProjectPath(createResult.projectPath);
     } else {
         console.error("Failed to create project:", createResult.error);
     }
@@ -34,8 +36,8 @@ const handleOpenProject = async () => {
 
     if (openResult.success) {
         console.log("Project opened successfully!", openResult);
-        // TODO: Update your Zustand store here to load the project data into the UI
-        // useStore.getState().setProject(openResult);
+        // Update store with the opened project path
+        useStore.getState().setActiveProjectPath(openResult.projectPath);
     } else {
         console.error("Failed to open project:", openResult.error);
     }

@@ -3,6 +3,8 @@ import { HandTools } from '../_enums/HandToolsEnum';
 import { ObjectTypes } from '../_enums/ObjectTypesEnum';
 
 export const useStore = create((set) => ({
+    activeProjectPath: null,
+    setActiveProjectPath: (path) => set({ activeProjectPath: path }),
 
     selectedHandTool: HandTools.PAN,
     selectHandTool: (handTool) => { set({ selectedHandTool: handTool }); },

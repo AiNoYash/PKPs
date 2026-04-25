@@ -11,6 +11,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { ProjectTree } from "../components/project/ProjectTree";
 import { ProjectGrid } from "../components/project/ProjectGrid";
+import { useStore } from "../context/useStore.js";
 import "../css/Project.css";
 
 // ipcRenderer exposed to the renderer process via Electron's contextBridge.
@@ -37,6 +38,8 @@ export const Project = () => {
   // Loading state to show a placeholder while the tree is being fetched.
   const [isLoading, setIsLoading] = useState(false);
 
+  const activeProjectPath = useStore((state) => state.activeProjectPath);
+
   // ---------------------------------------------------------------------------
   // fetchDirectoryTree
   //
@@ -45,6 +48,12 @@ export const Project = () => {
   // external callers (e.g. after asset:import) can trigger a refresh.
   // ---------------------------------------------------------------------------
   const fetchDirectoryTree = useCallback(async () => {
+    // If there is no active project, don't try to fetch
+    if (!activeProjectPath) {
+      setTreeData(null);
+      return;
+    }
+    
     setIsLoading(true);
     setError(null);
 
@@ -74,12 +83,12 @@ export const Project = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [activeProjectPath]);
 
   // Fetch the tree when the component first mounts.
   useEffect(() => {
     fetchDirectoryTree();
-  }, [fetchDirectoryTree]);
+  }, [fetchDirectoryTree, activeProjectPath]);
 
   // ---------------------------------------------------------------------------
   // handleFolderSelect
