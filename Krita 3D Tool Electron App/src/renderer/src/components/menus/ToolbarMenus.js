@@ -1,7 +1,49 @@
+const { invoke } = window.Project;
+
+const handleNewProject = async () => {
+    // 1. Open the native dialog
+    const dialogResult = await invoke('dialog:newProject');
+    
+    // If user canceled, do nothing
+    if (!dialogResult) return; 
+
+    // 2. Pass the extracted data to your existing backend creator
+    const { parentDirectory, projectName } = dialogResult;
+    const createResult = await invoke('project:create', { 
+        parentDirectory, 
+        projectName 
+    });
+
+    if (createResult.success) {
+        console.log("Project created successfully!");
+        // TODO: Update your Zustand store here to set the active project
+        // useStore.getState().setProject(createResult);
+    } else {
+        console.error("Failed to create project:", createResult.error);
+    }
+};
+
+const handleOpenProject = async () => {
+    // 1. Open the native folder picker
+    const projectPath = await invoke('dialog:openProject');
+    
+    if (!projectPath) return; // User canceled
+
+    // 2. Pass the path to your existing backend opener
+    const openResult = await invoke('project:open', { projectPath });
+
+    if (openResult.success) {
+        console.log("Project opened successfully!", openResult);
+        // TODO: Update your Zustand store here to load the project data into the UI
+        // useStore.getState().setProject(openResult);
+    } else {
+        console.error("Failed to open project:", openResult.error);
+    }
+};
 
 export const fileMenuItems = [
-    { label: 'New Project...', shortcut: 'Ctrl+Shift+N', action: () => console.log('New') },
-    { label: 'Open Project...', shortcut: 'Ctrl+O' },
+    { label: 'New Project...', shortcut: 'Ctrl+Shift+N', action: handleNewProject },
+    { label: 'Open Project...', shortcut: 'Ctrl+O', action: handleOpenProject },
     { type: 'divider' },
     { label: 'Save', shortcut: 'Ctrl+S', action: () => console.log('Saved') },
     { label: 'Save As...', shortcut: 'Ctrl+Shift+S', action: () => console.log('Saved As') },
