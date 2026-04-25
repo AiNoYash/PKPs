@@ -8,9 +8,9 @@
 //   - Folder order is fixed: assets/ → scenes/ → exports/ at the root level.
 // =============================================================================
 
-const fs = require("fs");
-const path = require("path");
-const { toRelativePath } = require("./GuidTableService.js");
+import fs from "fs";
+import path from "path";
+import { toRelativePath } from "./GuidTableService.js";
 
 // Maps file extensions to a fileType string used by the frontend for icons.
 const EXTENSION_TYPE_MAP = {
@@ -158,4 +158,4 @@ const buildDirectoryTree = (projectPath, table) => {
   };
 };
 
-module.exports = { buildDirectoryTree };
+export { buildDirectoryTree };

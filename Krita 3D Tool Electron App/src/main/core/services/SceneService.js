@@ -14,19 +14,19 @@
 //   e.g. "scenes/scene_a3f9c21b-7e04-4d88-b1a0-9c3f2e8d5b67.scene.json"
 // =============================================================================
 
-const fs = require("fs");
-const path = require("path");
-const { generateGuid } = require("./GuidService.js");
-const { createMeta, deleteMeta } = require("./MetaService.js");
-const {
+import fs from "fs";
+import path from "path";
+import { generateGuid } from "./GuidService.js";
+import { createMeta, deleteMeta } from "./MetaService.js";
+import {
   addEntry,
   removeEntry,
   getEntry,
   saveTable,
   toRelativePath,
   toAbsolutePath,
-} = require("./GuidTableService.js");
-const { readProjectJson, saveProjectJson } = require("./ProjectService.js");
+} from "./GuidTableService.js";
+import { readProjectJson, saveProjectJson } from "./ProjectService.js";
 
 const SCENES_FOLDER = "scenes";
 
@@ -458,7 +458,7 @@ const renameScene = (projectPath, guid, newName, table) => {
   }
 };
 
-module.exports = {
+export {
   createScene,
   saveScene,
   loadScene,

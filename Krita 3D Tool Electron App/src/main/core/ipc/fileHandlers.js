@@ -40,27 +40,27 @@
 //   - SceneService
 // =============================================================================
 
-const { ipcMain } = require("electron");
-const {
-  createProject,
-  openProject,
-  readProjectJson,
-  saveProjectJson,
-} = require("../services/ProjectService.js");
-const {
-  importAsset,
-  deleteAsset,
-  getAssetPath,
-  determineAssetType,
-} = require("../services/AssetService.js");
-const {
-  createScene,
-  saveScene,
-  loadScene,
-  deleteScene,
-  renameScene,
-} = require("../services/SceneService.js");
-const { buildDirectoryTree } = require("../services/DirectoryTreeService.js");
+import { ipcMain } from "electron";
+import { 
+  createProject, 
+  openProject, 
+  readProjectJson, 
+  saveProjectJson 
+} from "../services/ProjectService.js";
+import { 
+  importAsset, 
+  deleteAsset, 
+  getAssetPath, 
+  determineAssetType 
+} from "../services/AssetService.js";
+import { 
+  createScene, 
+  saveScene, 
+  loadScene, 
+  deleteScene, 
+  renameScene 
+} from "../services/SceneService.js";
+import { buildDirectoryTree } from "../services/DirectoryTreeService.js";
 
 // -----------------------------------------------------------------------------
 // SESSION STATE
@@ -449,12 +449,10 @@ ipcMain.handle("asset:getPath", async (_event, { guid }) => {
 //     // ... create BrowserWindow, etc.
 //   });
 // -----------------------------------------------------------------------------
-const registerFileHandlers = () => {
+export const registerFileHandlers = () => {
   // All handlers are registered at module load time via the ipcMain.handle()
   // calls above. This function's purpose is to give the main process a clean,
   // explicit entry point to initialise this module — and serves as a natural
   // place to add any future setup logic (e.g. logging, handler validation).
   console.log("[fileHandlers] All IPC file handlers registered successfully.");
 };
-
-module.exports = { registerFileHandlers };

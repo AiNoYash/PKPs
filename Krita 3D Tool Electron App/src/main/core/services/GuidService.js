@@ -5,7 +5,7 @@
 // Uses Node.js built-in 'crypto' module (no npm installs needed)
 // =============================================================================
 
-const { randomUUID } = require("crypto");
+import { randomUUID } from "crypto";
 
 // -----------------------------------------------------------------------------
 // generateGuid()
@@ -18,6 +18,4 @@ const generateGuid = () => {
   return randomUUID();
 }
 
-module.exports = {
-    generateGuid
-};
+export { generateGuid };

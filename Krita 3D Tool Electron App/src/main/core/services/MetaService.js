@@ -2,8 +2,8 @@
 // Responsible for all .meta file operations — creating, reading, and deleting
 // =============================================================================
 
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
 // -----------------------------------------------------------------------------
 // getMetaPath(filePath)
@@ -125,10 +125,4 @@ const deleteMeta = (filePath) => {
   // This prevents crashes during reconciliation where the state may be partially inconsistent.
 };
 
-module.exports = {
-  getMetaPath,
-  metaExistsFor,
-  createMeta,
-  readMeta,
-  deleteMeta,
-};
+export { getMetaPath, metaExistsFor, createMeta, readMeta, deleteMeta };

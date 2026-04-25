@@ -31,17 +31,17 @@
 //   - GuidTableService         (table mutation and path utilities)
 // =============================================================================
 
-const fs = require("fs");
-const path = require("path");
-const { generateGuid } = require("./GuidService.js");
-const { createMeta, readMeta, deleteMeta, metaExistsFor, getMetaPath } = require("./MetaService.js");
-const {
+import fs from "fs";
+import path from "path";
+import { generateGuid } from "./GuidService.js";
+import { createMeta, readMeta, deleteMeta, metaExistsFor, getMetaPath } from "./MetaService.js";
+import {
   addEntry,
   removeEntry,
   getEntry,
   toRelativePath,
   toAbsolutePath,
-} = require("./GuidTableService.js");
+} from "./GuidTableService.js";
 
 // -----------------------------------------------------------------------------
 // CONSTANTS
@@ -406,7 +406,7 @@ const reconcile = (projectPath, table) => {
   return table;
 };
 
-module.exports = {
+export {
   buildFileSets,
   reconcile,
 };
