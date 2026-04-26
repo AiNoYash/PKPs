@@ -7,6 +7,7 @@ import { ipcMain } from 'electron';
 import { setupStoreHandlers } from './core/store';
 import { setupProjectHandlers } from './core/ipc/dialogHandlers.js';
 import "./core/ipc/fileHandlers.js";
+import { setupKritaHandlers } from './core/ipc/kritaHandlers.js';
 
 let mainWindow = null;
 
@@ -80,7 +81,7 @@ if (!gotTheLock) {
 
   });
 
-
+  setupKritaHandlers();
 
   app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
