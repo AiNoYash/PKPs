@@ -7,7 +7,7 @@ import { MaterialTypes } from '../_enums/MaterialTypesEnum';
 export const useStore = create((set) => ({
 
     activeMenu: null,
-    setActiveMenu: (newActiveMenu) => { ser({ activeMenu: newActiveMenu }) },
+    setActiveMenu: (newActiveMenu) => { set({ activeMenu: newActiveMenu }) },
 
     activeProjectPath: null,
     setActiveProjectPath: (path) => { set({ activeProjectPath: path }) },
@@ -171,6 +171,9 @@ export const useStore = create((set) => ({
         }
         return { objects: newObjects };
     }),
+    // Add this to your Zustand store in useStore.js
+    isExportingToKrita: false,
+    setExportingToKrita: (isExporting) => set({ isExportingToKrita: isExporting }),
 
 }));
 
