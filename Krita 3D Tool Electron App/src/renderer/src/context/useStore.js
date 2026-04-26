@@ -171,6 +171,9 @@ export const useStore = create((set) => ({
         }
         return { objects: newObjects };
     }),
+    // Add this to your Zustand store in useStore.js
+    isExportingToKrita: false,
+    setExportingToKrita: (isExporting) => set({ isExportingToKrita: isExporting }),
 
 }));
 

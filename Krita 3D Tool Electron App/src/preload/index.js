@@ -13,3 +13,8 @@ contextBridge.exposeInMainWorld('Project', {
   // that don't need a dedicated wrapper here.
   invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
 });
+
+contextBridge.exposeInMainWorld('kritaAPI', {
+  getResolution: () => ipcRenderer.invoke('krita:get-resolution'),
+  sendSnapshot: (imageData) => ipcRenderer.invoke('krita:send-snapshot', imageData)
+});
