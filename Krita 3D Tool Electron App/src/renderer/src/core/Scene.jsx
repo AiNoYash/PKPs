@@ -8,56 +8,68 @@ import { SceneOverlay } from './Scene/SceneOverlay';
 import { HandTools } from '../_enums/HandToolsEnum';
 import { SceneTransformController } from './Scene/SceneTransformController';
 import { SceneRenderer } from './Scene/SceneRenderer';
+import './Scene/SceneOverlay.css'; 
 
-// function to match res in krita and app
+// function to match res between krita canvas and three.js sene
 function KritaHighResExporter() {
     const { gl, scene, camera } = useThree();
+    
+    const isExportingToKrita = useStore((state) => state.isExportingToKrita);
+    const setExportingToKrita = useStore((state) => state.setExportingToKrita);
 
     useEffect(() => {
-        window.captureKritaSnapshot = async () => {
-            console.log("Fetching Krita resolution...");
-            try {
-                const res = await fetch('http://127.0.0.1:5000/resolution');
-                const { width, height } = await res.json();
-                
-                console.log(`Krita resolution is ${width}x${height}. Resizing WebGL buffer...`);
+        const captureAndSend = async () => {
+            if (!isExportingToKrita) return;
 
+            console.log("Fetching Krita resolution via IPC...");
+            try {
+                // get res from krita
+                const { width, height } = await window.kritaAPI.getResolution();
+                
                 const originalWidth = gl.domElement.width;
                 const originalHeight = gl.domElement.height;
                 const originalPixelRatio = gl.getPixelRatio();
 
+                // resize WebGL drawing buffer to match Krita precisely
                 gl.setPixelRatio(1);
                 gl.setSize(width, height, false);
                 
+                // force a high-res render and extract base64 PNG
                 gl.render(scene, camera);
                 const dataUrl = gl.domElement.toDataURL('image/png');
 
+                //  shrink back to normal UI size
                 gl.setPixelRatio(originalPixelRatio);
                 gl.setSize(originalWidth, originalHeight, false);
 
-                console.log("Sending high-res snapshot to Krita...");
+                console.log("Sending high-res snapshot via IPC...");
 
-                const response = await fetch('http://127.0.0.1:5000/snapshot', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ image: dataUrl })
-                });
+                // send payload 
+                const success = await window.kritaAPI.sendSnapshot(dataUrl);
 
-                if (response.ok) {
-                    console.log("Snapshot sent successfully!");
+                if (success) {
+                    console.log("Snapshot successfully injected into Krita!");
+                } else {
+                    console.error("Main process reported failure to send snapshot.");
                 }
             } catch (err) {
-                alert("Failed to connect to Krita! Is the Python plugin running?");
-                console.error(err);
+                console.error("Export pipeline failed:", err);
+            } finally {
+                //  reset the Zustand trigger so we can fire it again later
+                setExportingToKrita(false);
             }
         };
-    }, [gl, scene, camera]);
 
-    return null; // This component doesn't render anything visible
+        captureAndSend();
+    }, [isExportingToKrita, gl, scene, camera, setExportingToKrita]);
+
+    return null;
 }
 
 export function Scene() {
-    const selectedHandTool = useStore((state) => (state.selectedHandTool));
+    const selectedHandTool = useStore((state) => state.selectedHandTool);
+    const isExportingToKrita = useStore((state) => state.isExportingToKrita);
+    const setExportingToKrita = useStore((state) => state.setExportingToKrita);
     const orbitRef = useRef(null);
 
     return (
@@ -69,24 +81,15 @@ export function Scene() {
                 </div>
 
                 <button 
+                    className="krita-export-btn"
+                    disabled={isExportingToKrita}
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        // Trigger the global capture function attached by the Canvas
-                        if (window.captureKritaSnapshot) {
-                            window.captureKritaSnapshot();
-                        }
+                        setExportingToKrita(true);
                     }} 
-                    style={{ 
-                        position: 'absolute', bottom: '20px', right: '20px', 
-                        pointerEvents: 'auto', padding: '12px 20px',
-                        backgroundColor: '#C95D5D', color: 'white',
-                        border: 'none', borderRadius: '4px',
-                        cursor: 'pointer', fontWeight: 'bold',
-                        boxShadow: '0 4px 6px rgba(0,0,0,0.5)'
-                    }}
                 >
-                    Send Snapshot to Krita
+                    {isExportingToKrita ? "Sending..." : "Send HD Snapshot"}
                 </button>
             </div>
 
