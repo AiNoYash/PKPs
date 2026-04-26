@@ -7,6 +7,10 @@
   --color-text-primary: #D6D6D6;
   --color-text-secondary: #8A8A8A;
   --color-divider: #ffffff1a;
+
+  /* ? it is 0 by default for win32 and linux */
+  --os-based-titlebar-padding-left: 0; 
+
 }
 
 /* 1. Box Sizing Setup */

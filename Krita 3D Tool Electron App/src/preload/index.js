@@ -5,7 +5,7 @@ contextBridge.exposeInMainWorld('Application', {
   storeGet: (key) => ipcRenderer.invoke('store:get', key),
   storeSet: (key, val) => ipcRenderer.invoke('store:set', key, val),
   openDirectoryDialog: () => ipcRenderer.invoke('dialog:openDirectory'),
-  system: process.platform
+  system: process.platform,
 });
 
 contextBridge.exposeInMainWorld('Project', {

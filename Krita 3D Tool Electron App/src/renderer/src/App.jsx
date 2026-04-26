@@ -4,12 +4,20 @@ import "./css/App.css";
 import "./css/ContextMenu.css";
 import { useStore } from "./context/useStore";
 import { ContextMenu } from "./components/ContextMenu";
+import { useEffect } from "react";
 
 function App() {
 
   const activeMenu = useStore(state => state.activeMenu);
   const setActiveMenu = useStore(state => state.setActiveMenu);
 
+  useEffect(() => {
+    if (window.Application.system === "darwin") {
+      document.documentElement.style.setProperty('--os-based-titlebar-padding-left', '100px');
+    }
+
+    
+  });
 
   return (
     <>
