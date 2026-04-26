@@ -4,23 +4,37 @@ import { Eye, EyeOff, Lock, Unlock, ChevronDown, ChevronRight, Box, Cuboid } fro
 import { ContextMenu } from "../components/ContextMenu";
 
 import "../css/Hierarchy.css";
+import { emptySpaceMenuItems, objectMenuItems } from "../components/menus/HierarchyMenus";
 
 const HierarchyNode = ({ id, depth = 0 }) => {
     const obj = useStore((state) => state.objects[id]);
     const selectedObjectId = useStore((state) => state.selectedObjectId);
     const selectObject = useStore((state) => state.selectObject);
+    const selectedInspectorObjectId = useStore((state) => state.selectedInspectorObjectId);
+    const selectInspectorObject = useStore((state) => state.selectInspectorObject);
     const toggleVisibility = useStore((state) => state.toggleVisibility);
     const toggleLock = useStore((state) => state.toggleLock);
-    
+    const setActiveMenu = useStore(state => state.setActiveMenu);
+    const setActiveMenusObjectId = useStore(state => state.setActiveMenusObjectId);
+
+
     const [expanded, setExpanded] = useState(true);
 
     if (!obj) return null;
 
-    const isSelected = selectedObjectId === id;
+    const isSelected = selectedInspectorObjectId === id;
     const hasChildren = obj.childrenIds && obj.childrenIds.length > 0;
 
+    
     const handleSelect = (e) => {
         e.stopPropagation();
+
+        if (obj.locked || !obj.visible) {
+            selectInspectorObject(id);
+            return;
+        }
+
+        selectInspectorObject(id);
         selectObject(id);
     };
 
@@ -31,7 +45,12 @@ const HierarchyNode = ({ id, depth = 0 }) => {
 
 
     return (
-        <div className="hierarchy-node-container">
+        <div className="hierarchy-node-container" onContextMenu={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setActiveMenusObjectId(obj.id);
+            setActiveMenu({ items: objectMenuItems, x: e.clientX, y: e.clientY });
+        }}>
             <div
                 className={`hierarchy-row ${isSelected ? "selected" : ""}`}
                 onClick={handleSelect}
@@ -67,7 +86,7 @@ const HierarchyNode = ({ id, depth = 0 }) => {
                 </div>
 
                 <Box size={14} className="hierarchy-type-icon" />
-                
+
                 <span className="hierarchy-name">{obj.name}</span>
             </div>
 
@@ -82,10 +101,14 @@ const HierarchyNode = ({ id, depth = 0 }) => {
     );
 };
 
+
 export function Hierarchy() {
     const rootObjectIds = useStore((state) => state.rootObjectIds);
     const setAllVisibility = useStore((state) => state.setAllVisibility);
     const setAllLock = useStore((state) => state.setAllLock);
+
+    const setActiveMenu = useStore(state => state.setActiveMenu);
+
 
     const [sceneExpanded, setSceneExpanded] = useState(true);
     const [sceneVisible, setSceneVisible] = useState(true);
@@ -106,10 +129,14 @@ export function Hierarchy() {
     };
 
     return (
-        <div className="docker-content-container hierarchy-container">
+        <div className="docker-content-container hierarchy-container" onContextMenu={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setActiveMenu({ items: emptySpaceMenuItems, x: e.clientX, y: e.clientY });
+        }}>
             <div className="hierarchy-node-container">
                 {/* SCENE HEADER NODE */}
-                <div 
+                <div
                     className="hierarchy-row scene-header"
                     onClick={() => setSceneExpanded(!sceneExpanded)}
                 >
@@ -139,7 +166,7 @@ export function Hierarchy() {
                     </div>
 
                     <Cuboid size={14} className="hierarchy-type-icon scene-icon" />
-                    
+
                     <span className="hierarchy-name" style={{ fontWeight: '600' }}>Main Scene</span>
                 </div>
 

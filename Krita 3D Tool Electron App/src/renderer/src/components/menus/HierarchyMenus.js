@@ -1,28 +1,37 @@
+import { useStore } from "../../context/useStore";
+import { ObjectFactory } from "../../_classes/ObjectFactory";
+import { GeometryTypes } from "../../_enums/GeometryTypesEnum";
+
+const state = useStore.getState();
+
 export const emptySpaceMenuItems = [
     {
         label: "Create",
         children: [
-            { label: "Empty Group", action: () => console.log("Create Group in Root") },
+            {
+                label: "Empty Group",
+                action: () => useStore.getState().addRootObject(ObjectFactory.createGroup('New Group'))
+            },
             { type: "divider" },
             {
                 label: "3D Object",
                 children: [
-                    { label: "Box", action: () => console.log("Add Box") },
-                    { label: "Capsule", action: () => console.log("Add Capsule") },
-                    { label: "Cone", action: () => console.log("Add Cone") },
-                    { label: "Cylinder", action: () => console.log("Add Cylinder") },
-                    { label: "Sphere", action: () => console.log("Add Sphere") },
-                    { label: "Tetrahedron", action: () => console.log("Add Tetrahedron") },
-                    { label: "Torus", action: () => console.log("Add Torus") },
-                    { label: "TorusKnot", action: () => console.log("Add TorusKnot") }
+                    { label: "Box", action: () => useStore.getState().addRootObject(ObjectFactory.createGeometricObject('Box', GeometryTypes.BOX)) },
+                    { label: "Capsule", action: () => useStore.getState().addRootObject(ObjectFactory.createGeometricObject('Capsule', GeometryTypes.CAPSULE)) },
+                    { label: "Cone", action: () => useStore.getState().addRootObject(ObjectFactory.createGeometricObject('Cone', GeometryTypes.CONE)) },
+                    { label: "Cylinder", action: () => useStore.getState().addRootObject(ObjectFactory.createGeometricObject('Cylinder', GeometryTypes.CYLINDER)) },
+                    { label: "Sphere", action: () => useStore.getState().addRootObject(ObjectFactory.createGeometricObject('Sphere', GeometryTypes.SPHERE)) },
+                    { label: "Tetrahedron", action: () => useStore.getState().addRootObject(ObjectFactory.createGeometricObject('Tetrahedron', GeometryTypes.TETRAHEDRON)) },
+                    { label: "Torus", action: () => useStore.getState().addRootObject(ObjectFactory.createGeometricObject('Torus', GeometryTypes.TORUS)) },
+                    { label: "TorusKnot", action: () => useStore.getState().addRootObject(ObjectFactory.createGeometricObject('TorusKnot', GeometryTypes.TORUS_KNOT)) }
                 ]
             },
             {
                 label: "2D Object",
                 children: [
-                    { label: "Circle", action: () => console.log("Add Circle") },
-                    { label: "Plane", action: () => console.log("Add Plane") },
-                    { label: "Ring", action: () => console.log("Add Ring") }
+                    { label: "Circle", action: () => useStore.getState().addRootObject(ObjectFactory.createGeometricObject('Circle', GeometryTypes.CIRCLE)) },
+                    { label: "Plane", action: () => useStore.getState().addRootObject(ObjectFactory.createGeometricObject('Plane', GeometryTypes.PLANE)) },
+                    { label: "Ring", action: () => useStore.getState().addRootObject(ObjectFactory.createGeometricObject('Ring', GeometryTypes.RING)) }
                 ]
             },
             { type: "divider" },
@@ -52,6 +61,6 @@ export const objectMenuItems = [
     ...emptySpaceMenuItems,
     {
         label: "Delete",
-        action: () => {  console.log("Open File Dialog") }
+        action: () => { console.log("Open File Dialog") }
     }
-]
+];

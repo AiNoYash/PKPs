@@ -16,7 +16,7 @@ function App() {
       document.documentElement.style.setProperty('--os-based-titlebar-padding-left', '100px');
     }
 
-    
+
   });
 
   return (
@@ -29,7 +29,7 @@ function App() {
         {activeMenu && (
           <>
             {/* ? This is going to be inside of the whole page and when it is clicked we will use it to remove out context menu */}
-            <div className="menu-overlay" onClick={() => setActiveMenu(null)} />
+            <div className="menu-overlay" onClick={(e) => setActiveMenu(null)} onContextMenu={(e) => { setActiveMenu(null) }} />
             {/* Really cool this that since menu-overlay and context-menu are actually sibling of each other the event bubbling is not happening in both */}
             <ContextMenu
               items={activeMenu.items}

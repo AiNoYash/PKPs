@@ -8,12 +8,12 @@ import { SceneOverlay } from './Scene/SceneOverlay';
 import { HandTools } from '../_enums/HandToolsEnum';
 import { SceneTransformController } from './Scene/SceneTransformController';
 import { SceneRenderer } from './Scene/SceneRenderer';
-import './Scene/SceneOverlay.css'; 
+import './Scene/SceneOverlay.css';
 
 // function to match res between krita canvas and three.js sene
 function KritaHighResExporter() {
     const { gl, scene, camera } = useThree();
-    
+
     const isExportingToKrita = useStore((state) => state.isExportingToKrita);
     const setExportingToKrita = useStore((state) => state.setExportingToKrita);
 
@@ -25,7 +25,7 @@ function KritaHighResExporter() {
             try {
                 // get res from krita
                 const { width, height } = await window.kritaAPI.getResolution();
-                
+
                 const originalWidth = gl.domElement.width;
                 const originalHeight = gl.domElement.height;
                 const originalPixelRatio = gl.getPixelRatio();
@@ -33,7 +33,7 @@ function KritaHighResExporter() {
                 // resize WebGL drawing buffer to match Krita precisely
                 gl.setPixelRatio(1);
                 gl.setSize(width, height, false);
-                
+
                 // force a high-res render and extract base64 PNG
                 gl.render(scene, camera);
                 const dataUrl = gl.domElement.toDataURL('image/png');
@@ -74,34 +74,34 @@ export function Scene() {
 
     return (
         <div className='docker-content-container' style={{ position: 'relative' }}>
-            
+
             <div style={{ position: 'absolute', inset: 0, zIndex: 9999, pointerEvents: 'none' }}>
                 <div style={{ pointerEvents: 'auto' }}>
                     <SceneOverlay />
                 </div>
 
-                <button 
+                <button
                     className="krita-export-btn"
                     disabled={isExportingToKrita}
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
                         setExportingToKrita(true);
-                    }} 
+                    }}
                 >
                     {isExportingToKrita ? "Sending..." : "Send HD Snapshot"}
                 </button>
             </div>
 
             <Canvas gl={{ preserveDrawingBuffer: true }}>
-                
+
                 <KritaHighResExporter />
 
                 <color attach="background" args={['#1e1e1e']} />
 
                 <Grid
                     infiniteGrid={true} cellSize={1} cellThickness={0.5}
-                    fadeDistance={10000} sectionColor="#444444" cellColor="#222222" 
+                    fadeDistance={10000} sectionColor="#444444" cellColor="#222222"
                     side={THREE.DoubleSide}
                 />
 
@@ -111,11 +111,11 @@ export function Scene() {
 
                 <OrbitControls makeDefault ref={orbitRef}
                     mouseButtons={{
-                        LEFT: THREE.MOUSE.PAN,     
-                        MIDDLE: THREE.MOUSE.DOLLY, 
-                        RIGHT: THREE.MOUSE.ROTATE  
+                        LEFT: THREE.MOUSE.PAN,
+                        MIDDLE: THREE.MOUSE.DOLLY,
+                        RIGHT: THREE.MOUSE.ROTATE
                     }}
-                    enabled={selectedHandTool === HandTools.PAN} 
+                    enabled={true}
                 />
 
                 <directionalLight position={[5, 10, 5]} intensity={1} />

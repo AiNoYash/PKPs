@@ -10,6 +10,7 @@ export function SceneNode({ id }) {
     const obj = useStore((state) => state.objects[id]);
     const selectedObjectId = useStore((state) => state.selectedObjectId);
     const selectObject = useStore((state) => state.selectObject);
+    const selectInspectorObject = useStore((state) => state.selectInspectorObject);
     const selectedHandTool = useStore((state) => state.selectedHandTool);
 
     if (!obj) return null;
@@ -26,14 +27,15 @@ export function SceneNode({ id }) {
 
     const handlePointerDown = (e) => {
         if (obj.locked) return;
-        
+
         if (transformControlRef.current && transformControlRef.current.axis !== null) {
-            return; 
+            return;
         }
-        
-        
+
+
         e.stopPropagation();
         selectObject(id);
+        selectInspectorObject(id);
     };
 
     const renderMaterial = () => {

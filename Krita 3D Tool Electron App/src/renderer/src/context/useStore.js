@@ -9,18 +9,24 @@ export const useStore = create((set) => ({
     activeMenu: null,
     setActiveMenu: (newActiveMenu) => { set({ activeMenu: newActiveMenu }) },
 
+    activeMenusObjectId: null,
+    setActiveMenusObjectId: (newActiveMenusObjectId) => { set({ activeMenusObjectId: newActiveMenusObjectId }) },
+
     activeProjectPath: null,
     setActiveProjectPath: (path) => { set({ activeProjectPath: path }) },
 
     selectedHandTool: HandTools.PAN,
     selectHandTool: (handTool) => { set({ selectedHandTool: handTool }); },
 
-    activeSceneName: "Main Scene",
+    activeSceneName: "New Scene",
     setActiveSceneName: (newSceneName) => { set({ activeSceneName: newSceneName }) },
 
-
+    // ! uhhh name of setter and prop are not same uh noooooo!!
     selectedObjectId: null,
     selectObject: (id) => set({ selectedObjectId: id }),
+
+    selectedInspectorObjectId: null,
+    selectInspectorObject: (id) => set({ selectedInspectorObjectId: id }),
 
     rootObjectIds: ['character-base-group', 'ground-plane'],
 
@@ -131,8 +137,79 @@ export const useStore = create((set) => ({
         objects: { ...state.objects, [newObj.id]: newObj }
     })),
 
+    addChildObject: (parentId, newObj) => set((state) => {
+        const parent = state.objects[parentId];
 
+        if (!parent) {
+            console.warn(`Parent object with ID ${parentId} not found.`);
+            return state;
+        }
 
+        const childToAdd = {
+            ...newObj,
+            parentId: parentId
+        };
+
+        return {
+            objects: {
+                ...state.objects,
+                [newObj.id]: childToAdd,
+                [parentId]: {
+                    ...parent,
+                    childrenIds: [...(parent.childrenIds || []), newObj.id]
+                }
+            }
+        };
+    }),
+
+    deleteObject: (idToDelete) => set((state) => {
+        const objToDelete = state.objects[idToDelete];
+        if (!objToDelete) return state;
+
+        const idsToDelete = new Set([idToDelete]);
+
+        const collectDescendants = (id) => {
+            const obj = state.objects[id];
+            if (obj && obj.childrenIds) {
+                obj.childrenIds.forEach(childId => {
+                    idsToDelete.add(childId);
+                    collectDescendants(childId);
+                });
+            }
+        };
+
+        collectDescendants(idToDelete);
+
+        // 2. Create a new objects map and delete the gathered IDs
+        const newObjects = { ...state.objects };
+        idsToDelete.forEach(id => {
+            delete newObjects[id];
+        });
+
+        // 3. If it had a parent, remove this ID from the parent's childrenIds array
+        if (objToDelete.parentId && newObjects[objToDelete.parentId]) {
+            newObjects[objToDelete.parentId] = {
+                ...newObjects[objToDelete.parentId],
+                childrenIds: newObjects[objToDelete.parentId].childrenIds.filter(childId => childId !== idToDelete)
+            };
+        }
+
+        // 4. If it was a root object, remove it from the rootObjectIds array
+        const newRootObjectIds = objToDelete.parentId === null
+            ? state.rootObjectIds.filter(rootId => rootId !== idToDelete)
+            : state.rootObjectIds;
+
+        // 5. Deselect if the currently selected or active menu object was deleted
+        const newSelectedObjectId = idsToDelete.has(state.selectedObjectId) ? null : state.selectedObjectId;
+        const newActiveMenusObjectId = idsToDelete.has(state.activeMenusObjectId) ? null : state.activeMenusObjectId;
+
+        return {
+            objects: newObjects,
+            rootObjectIds: newRootObjectIds,
+            selectedObjectId: newSelectedObjectId,
+            activeMenusObjectId: newActiveMenusObjectId
+        };
+    }),
 
     toggleVisibility: (id) => set((state) => {
         const obj = state.objects[id];
@@ -141,18 +218,21 @@ export const useStore = create((set) => ({
             objects: {
                 ...state.objects,
                 [id]: { ...obj, visible: !obj.visible }
-            }
+            },
+            selectedObjectId: state.selectedObjectId === id ? null : state.selectedObjectId
         };
     }),
 
     toggleLock: (id) => set((state) => {
         const obj = state.objects[id];
         if (!obj) return state;
+
         return {
             objects: {
                 ...state.objects,
                 [id]: { ...obj, locked: !obj.locked }
-            }
+            },
+            selectedObjectId: state.selectedObjectId === id ? null : state.selectedObjectId
         };
     }),
 
@@ -161,7 +241,10 @@ export const useStore = create((set) => ({
         for (const key in state.objects) {
             newObjects[key] = { ...state.objects[key], visible };
         }
-        return { objects: newObjects };
+        return {
+            objects: newObjects,
+            selectedObjectId: null
+        };
     }),
 
     setAllLock: (locked) => set((state) => {
@@ -169,7 +252,10 @@ export const useStore = create((set) => ({
         for (const key in state.objects) {
             newObjects[key] = { ...state.objects[key], locked };
         }
-        return { objects: newObjects };
+        return {
+            objects: newObjects,
+            selectedObjectId: null
+        };
     }),
     // Add this to your Zustand store in useStore.js
     isExportingToKrita: false,

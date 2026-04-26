@@ -1,5 +1,6 @@
 import { MaterialFactory } from "./MaterialFactory";
 import { MaterialTypes } from "../_enums/MaterialTypesEnum";
+import { GeometryTypes } from "../_enums/GeometryTypesEnum";
 
 
 const getDefaultArgsForGeometry = (type) => {
