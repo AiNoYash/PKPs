@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { useThree } from '@react-three/fiber';
 import { TransformControls } from '@react-three/drei';
 import { HandTools } from '../../_enums/HandToolsEnum';
-import { useStore } from '../../context/useStore';
+import { transformControlRef, useStore } from '../../context/useStore';
 
 export function SceneTransformController() {
-    
+
     const { scene } = useThree();
     const selectedObjectId = useStore((state) => state.selectedObjectId);
     const selectedHandTool = useStore((state) => state.selectedHandTool);
@@ -36,9 +36,12 @@ export function SceneTransformController() {
 
     return (
         <TransformControls
+            ref={(node) => { transformControlRef.current = node }}
             object={targetObject}
             mode={selectedHandTool.toLowerCase()}
             onMouseUp={handleTransformEnd}
         />
     );
 }
+
+

@@ -5,12 +5,18 @@ import { GeometryTypes } from '../_enums/GeometryTypesEnum';
 import { MaterialTypes } from '../_enums/MaterialTypesEnum';
 
 export const useStore = create((set) => ({
+
+    activeMenu: null,
+    setActiveMenu: (newActiveMenu) => { ser({ activeMenu: newActiveMenu }) },
+
     activeProjectPath: null,
-    setActiveProjectPath: (path) => set({ activeProjectPath: path }),
+    setActiveProjectPath: (path) => { set({ activeProjectPath: path }) },
 
     selectedHandTool: HandTools.PAN,
     selectHandTool: (handTool) => { set({ selectedHandTool: handTool }); },
 
+    activeSceneName: "Main Scene",
+    setActiveSceneName: (newSceneName) => { set({ activeSceneName: newSceneName }) },
 
 
     selectedObjectId: null,
@@ -149,4 +155,24 @@ export const useStore = create((set) => ({
             }
         };
     }),
+
+    setAllVisibility: (visible) => set((state) => {
+        const newObjects = {};
+        for (const key in state.objects) {
+            newObjects[key] = { ...state.objects[key], visible };
+        }
+        return { objects: newObjects };
+    }),
+
+    setAllLock: (locked) => set((state) => {
+        const newObjects = {};
+        for (const key in state.objects) {
+            newObjects[key] = { ...state.objects[key], locked };
+        }
+        return { objects: newObjects };
+    }),
+
 }));
+
+
+export const transformControlRef = { current: null };

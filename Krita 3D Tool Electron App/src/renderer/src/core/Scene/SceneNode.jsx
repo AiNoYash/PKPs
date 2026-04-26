@@ -1,4 +1,4 @@
-import { useStore } from '../../context/useStore';
+import { transformControlRef, useStore } from '../../context/useStore';
 import { TransformControls } from '@react-three/drei';
 import { ObjectTypes } from '../../_enums/ObjectTypesEnum';
 import { HandTools } from '../../_enums/HandToolsEnum';
@@ -26,6 +26,12 @@ export function SceneNode({ id }) {
 
     const handlePointerDown = (e) => {
         if (obj.locked) return;
+        
+        if (transformControlRef.current && transformControlRef.current.axis !== null) {
+            return; 
+        }
+        
+        
         e.stopPropagation();
         selectObject(id);
     };
@@ -33,7 +39,7 @@ export function SceneNode({ id }) {
     const renderMaterial = () => {
         // Convert string 'FrontSide' / 'DoubleSide' to actual THREE constants
         const props = { ...obj.meshData.materialProps, side: THREE[obj.meshData.materialProps.side] };
-        
+
         switch (obj.meshData.materialType) {
             case MaterialTypes.BASIC_MATERIAL:
                 return <meshBasicMaterial {...props} />;
@@ -83,7 +89,7 @@ export function SceneNode({ id }) {
                     {obj.meshData.geometryType === GeometryTypes.TETRAHEDRON && <tetrahedronGeometry args={obj.meshData.geometryArgs} />}
                     {obj.meshData.geometryType === GeometryTypes.TORUS && <torusGeometry args={obj.meshData.geometryArgs} />}
                     {obj.meshData.geometryType === GeometryTypes.TORUS_KNOT && <torusKnotGeometry args={obj.meshData.geometryArgs} />}
-                    
+
                     {renderMaterial()}
                     {renderChildren()}
                 </mesh>
