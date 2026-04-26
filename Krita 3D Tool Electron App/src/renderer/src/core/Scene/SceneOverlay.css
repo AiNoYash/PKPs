@@ -39,3 +39,29 @@
 .tools-svg-container.active {
     background-color: rgba(214, 214, 214, 0.4);
 }
+
+.krita-export-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    pointer-events: auto; 
+    padding: 12px 20px;
+    background-color: var(--color-accent); 
+    color: var(--color-text-primary);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.2s ease;
+}
+
+.krita-export-btn:hover {
+    background-color: #4b80b5;
+}
+
+.krita-export-btn:disabled {
+    background-color: var(--color-surface-panel);
+    color: var(--color-text-secondary);
+    cursor: not-allowed;
+}
