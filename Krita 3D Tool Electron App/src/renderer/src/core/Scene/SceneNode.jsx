@@ -1,5 +1,5 @@
 import { transformControlRef, useStore } from '../../context/useStore';
-import { TransformControls } from '@react-three/drei';
+import { TransformControls, useTexture } from '@react-three/drei';
 import { ObjectTypes } from '../../_enums/ObjectTypesEnum';
 import { HandTools } from '../../_enums/HandToolsEnum';
 import { GeometryTypes } from '../../_enums/GeometryTypesEnum';
@@ -11,6 +11,9 @@ import { PerspectiveCamera } from '@react-three/drei';
 import { OrthographicCamera } from '@react-three/drei';
 import { useRef, useEffect } from 'react';
 import { useThree } from '@react-three/fiber';
+import { Suspense } from 'react';
+import { MaterialWithTextures } from './MaterialWithTexture';
+import { AsyncMaterialLoader } from './AsyncMaterialLoader';
 
 
 /**
@@ -75,6 +78,11 @@ export function SceneNode({ id }) {
     const selectInspectorObject = useStore((state) => state.selectInspectorObject);
     const selectedHandTool = useStore((state) => state.selectedHandTool);
 
+    // ? Here because idk you can't call react hooks inside conditional statements
+    const targetId = obj?.lightData?.targetId;
+    const targetObj = useStore((state) => targetId ? state.objects[targetId] : null);
+
+
     if (!obj) return null;
 
     const pos = [obj.transform.position.x, obj.transform.position.y, obj.transform.position.z];
@@ -82,9 +90,6 @@ export function SceneNode({ id }) {
     const scl = [obj.transform.scale.x, obj.transform.scale.y, obj.transform.scale.z];
 
 
-    // ? Here because idk you can't call react hooks inside conditional statements
-    const targetId = obj?.lightData?.targetId;
-    const targetObj = useStore((state) => targetId ? state.objects[targetId] : null);
 
 
     const renderChildren = () => {
@@ -106,20 +111,7 @@ export function SceneNode({ id }) {
         selectInspectorObject(id);
     };
 
-    const renderMaterial = () => {
-        // Convert string 'FrontSide' / 'DoubleSide' to actual THREE constants
-        const props = { ...obj.meshData.materialProps, side: THREE[obj.meshData.materialProps.side] };
 
-        switch (obj.meshData.materialType) {
-            case MaterialTypes.BASIC_MATERIAL:
-                return <meshBasicMaterial {...props} />;
-            case MaterialTypes.PHYSICAL_MATERIAL:
-                return <meshPhysicalMaterial {...props} />;
-            case MaterialTypes.STANDARD_MATERIAL:
-            default:
-                return <meshStandardMaterial {...props} />;
-        }
-    };
 
     switch (obj.type) {
         case ObjectTypes.GROUP:
@@ -162,7 +154,7 @@ export function SceneNode({ id }) {
                     {obj.meshData.geometryType === GeometryTypes.TORUS && <torusGeometry args={obj.meshData.geometryArgs} />}
                     {obj.meshData.geometryType === GeometryTypes.TORUS_KNOT && <torusKnotGeometry args={obj.meshData.geometryArgs} />}
 
-                    {renderMaterial()}
+                    <AsyncMaterialLoader obj={obj} />
                     {renderChildren()}
                 </mesh>
             );

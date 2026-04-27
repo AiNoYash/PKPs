@@ -21,6 +21,7 @@ export const Project = () => {
   // The full directory tree object returned from the backend.
   const [treeData, setTreeData] = useState(null);
 
+  const setActiveFileTree = useStore((state) => state.setActiveFileTree);
   // Absolute path of the folder currently selected in the left tree.
   // Drives what the right grid displays.
   const [selectedFolderPath, setSelectedFolderPath] = useState(null);
@@ -54,7 +55,7 @@ export const Project = () => {
       setTreeData(null);
       return;
     }
-    
+
     setIsLoading(true);
     setError(null);
 
@@ -68,7 +69,7 @@ export const Project = () => {
       }
 
       setTreeData(result.tree);
-      console.log(result.tree);
+      setActiveFileTree(result.tree);
 
       // On first load, auto-select and auto-expand the root node so the
       // panel doesn't appear blank — mirrors Unity's default behaviour.
@@ -82,7 +83,7 @@ export const Project = () => {
     } catch (err) {
       setError(`Failed to load project directory. Reason: ${err.message}`);
       setTreeData(null);
-      
+
     } finally {
       setIsLoading(false);
     }

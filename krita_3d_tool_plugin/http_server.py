@@ -33,13 +33,14 @@ class ServerThread(QThread):
 
             def do_GET(self):
                 if self.path == '/resolution':
-                    doc = Krita.instance().activeDocument()
-                    res = {"width": doc.width(), "height": doc.height()} if doc else {"width": 1920, "height": 1080}
+                    # Read the pre-cached resolution instead of calling Krita.instance()
+                    res = self.thread.canvas_res
                     self.send_response(200)
                     self.send_header('Content-type', 'application/json')
                     self.send_header('Access-Control-Allow-Origin', '*')
+                    self.send_header('Content-Length', str(len(response_bytes))) # NEW
                     self.end_headers()
-                    self.wfile.write(json.dumps(res).encode('utf-8'))
+                    self.wfile.write(response_bytes)
                     
                 elif self.path == '/ping':
                     self.thread.heartbeat_received.emit()
@@ -49,27 +50,30 @@ class ServerThread(QThread):
                         cmd = "export"
                         self.thread.request_export = False
                         
-                    # Reset command state if it was consumed
                     if cmd != "none" and cmd != "export":
                         self.thread.command = "none"
 
+                    response_bytes = json.dumps({"status": "connected", "command": cmd}).encode('utf-8')
+                    
                     self.send_response(200)
                     self.send_header('Content-type', 'application/json')
                     self.send_header('Access-Control-Allow-Origin', '*')
+                    self.send_header('Content-Length', str(len(response_bytes))) # NEW
                     self.end_headers()
-                    self.wfile.write(json.dumps({"status": "connected", "command": cmd}).encode('utf-8'))
+                    self.wfile.write(response_bytes)
 
-                # NEW: Endpoint to deliver the base64 layers
                 elif self.path == '/layers':
+                    response_bytes = b'[]'
+                    if self.thread.layer_payload:
+                        response_bytes = json.dumps(self.thread.layer_payload).encode('utf-8')
+                        self.thread.layer_payload = None
+
                     self.send_response(200)
                     self.send_header('Content-type', 'application/json')
                     self.send_header('Access-Control-Allow-Origin', '*')
+                    self.send_header('Content-Length', str(len(response_bytes))) # NEW
                     self.end_headers()
-                    if self.thread.layer_payload:
-                        self.wfile.write(json.dumps(self.thread.layer_payload).encode('utf-8'))
-                        self.thread.layer_payload = None
-                    else:
-                        self.wfile.write(b'[]')
+                    self.wfile.write(response_bytes)
 
             def do_POST(self):
                 if self.path == '/snapshot':
@@ -83,12 +87,16 @@ class ServerThread(QThread):
                     except Exception as e:
                         print(f"Error parsing incoming snapshot: {e}")
 
+                    response_bytes = b'{"status": "ok"}'
                     self.send_response(200)
                     self.send_header('Content-type', 'application/json')
                     self.send_header('Access-Control-Allow-Origin', '*')
+                    self.send_header('Content-Length', str(len(response_bytes))) # NEW
                     self.end_headers()
-                    self.wfile.write(b'{"status": "ok"}')
-
+                    self.wfile.write(response_bytes)
+                    
+                    
+                    
         server_address = ('127.0.0.1', 5000)
         self.httpd = HTTPServer(server_address, RequestHandler)
         self.httpd.serve_forever()

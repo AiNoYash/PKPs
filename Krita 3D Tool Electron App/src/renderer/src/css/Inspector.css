@@ -150,3 +150,49 @@ input[type="color"]::-webkit-color-swatch {
     border: none;
     border-radius: 2px;
 }
+
+/* --- Dropdown Select Styling --- */
+.inspector-select {
+    flex: 1; /* Takes up the remaining space next to the label */
+    background-color: rgba(0, 0, 0, 0.2); /* Matches vector inputs */
+    color: #ffffff;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    padding: 3px 6px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.1s, background-color 0.1s;
+    
+    /* Optional: Makes it look a bit flatter on Windows/Linux */
+    box-sizing: border-box;
+}
+
+.inspector-select:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.inspector-select:focus {
+    border-color: #2c5d87; /* Matches your Unity-style selection blue */
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Styles the actual dropdown menu items (Electron/Chromium respects this) */
+.inspector-select option {
+    background-color: #2b2b2b; /* Matches your divider/header variable */
+    color: #d1d5db;
+    padding: 4px;
+}
+
+/* --- Subsection Titles --- */
+/* For the "Geometry", "Material", and "Texture Maps" headers */
+.inspector-subsection-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #9ca3af; /* Faded text color from your empty state */
+    text-transform: uppercase;
+    margin-top: 8px;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
