@@ -5,15 +5,15 @@ const { invoke } = window.Project;
 const handleNewProject = async () => {
     // 1. Open the native dialog
     const dialogResult = await invoke('dialog:newProject');
-    
+
     // If user canceled, do nothing
-    if (!dialogResult) return; 
+    if (!dialogResult) return;
 
     // 2. Pass the extracted data to your existing backend creator
     const { parentDirectory, projectName } = dialogResult;
-    const createResult = await invoke('project:create', { 
-        parentDirectory, 
-        projectName 
+    const createResult = await invoke('project:create', {
+        parentDirectory,
+        projectName
     });
 
     if (createResult.success) {
@@ -28,7 +28,7 @@ const handleNewProject = async () => {
 const handleOpenProject = async () => {
     // 1. Open the native folder picker
     const projectPath = await invoke('dialog:openProject');
-    
+
     if (!projectPath) return; // User canceled
 
     // 2. Pass the path to your existing backend opener
@@ -53,7 +53,7 @@ const handleFileImport = async () => {
 
     // 2. Ask the backend to determine the asset type (model, texture, krita, etc.)
     const typeResult = await invoke('asset:determineType', { sourcePath });
-    
+
     if (!typeResult.success) {
         console.error("Import failed:", typeResult.error);
         // Optional: Show an error alert to the user here
@@ -61,10 +61,10 @@ const handleFileImport = async () => {
     }
 
     // 3. Send the file to the backend to be copied into the active project and assigned a GUID
-    const importResult = await invoke('asset:import', { 
-        sourcePath, 
-        type: typeResult.assetType, 
-        name: fileName 
+    const importResult = await invoke('asset:import', {
+        sourcePath,
+        type: typeResult.assetType,
+        name: fileName
     });
 
     if (importResult.success) {
@@ -78,14 +78,15 @@ const handleFileImport = async () => {
 
 const handleSaveAs = async () => {
     const projectPath = useStore.getState().activeProjectPath;
-    if(!projectPath){
+    if (!projectPath) {
         throw Error("No active project found, open / create a project first");
     }
 
     let response;
-    try{
-        response = await invoke('dialog:saveAsScene', {projectPath});
-    }catch(err){
+    try {
+        const { rootObjectIds, objects } = useStore.getState();
+        response = await invoke('dialog:saveAsScene', { projectPath, sceneState: { rootObjectIds, objects } });
+    } catch (err) {
         console.error("handleSaveAs: IPC call failed:", err);
         return;
     }
@@ -98,7 +99,7 @@ const handleSaveAs = async () => {
     }
 
     console.log("Scene saved successfully:", response.data);
-    
+
     useStore.getState().triggerTreeRefresh();
     console.log("Tree refreshed!");
 }
