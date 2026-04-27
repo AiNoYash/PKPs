@@ -13,6 +13,10 @@ import { useRef, useEffect } from 'react';
 import { useThree } from '@react-three/fiber';
 
 
+const textureBase64Map = {
+
+};
+
 /**
  * A dedicated component for directional lights that correctly wires up
  * the Three.js target in world space. The target object3D must live in
@@ -114,7 +118,10 @@ export function SceneNode({ id }) {
 
         switch (obj.meshData.materialType) {
             case MaterialTypes.BASIC_MATERIAL:
-                return <meshBasicMaterial {...props} />;
+
+            
+
+                return <meshBasicMaterial {...props}  />;
             case MaterialTypes.PHYSICAL_MATERIAL:
                 return <meshPhysicalMaterial {...props} />;
             case MaterialTypes.STANDARD_MATERIAL:

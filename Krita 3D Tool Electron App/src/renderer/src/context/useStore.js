@@ -6,6 +6,9 @@ import { MaterialTypes } from '../_enums/MaterialTypesEnum';
 
 export const useStore = create((set) => ({
 
+    activeFileTree: null,
+    setActiveFileTree: (newActiveFileTree) => { set({ activeFileTree: newActiveFileTree }) },
+
     activeMenu: null,
     setActiveMenu: (newActiveMenu) => { set({ activeMenu: newActiveMenu }) },
 
@@ -292,6 +295,48 @@ export const useStore = create((set) => ({
                     lightData: {
                         ...obj.lightData,
                         ...partialLightData
+                    }
+                }
+            }
+        };
+    }),
+
+    updateObject: (id, partialData) => set((state) => {
+        const obj = state.objects[id];
+        if (!obj) return state;
+
+        return {
+            objects: {
+                ...state.objects,
+                [id]: {
+                    ...obj,
+                    ...partialData
+                }
+            }
+        };
+    }),
+
+
+    updateMeshData: (id, partialMeshData) => set((state) => {
+        const obj = state.objects[id];
+        if (!obj || !obj.meshData) return state;
+
+        return {
+            objects: {
+                ...state.objects,
+                [id]: {
+                    ...obj,
+                    meshData: {
+                        ...obj.meshData,
+                        ...partialMeshData,
+                        // If you are updating materialProps, ensure deep merging
+                        materialProps: partialMeshData.materialProps
+                            ? { ...obj.meshData.materialProps, ...partialMeshData.materialProps }
+                            : obj.meshData.materialProps,
+                        // Same for textureMaps
+                        textureMaps: partialMeshData.textureMaps
+                            ? { ...obj.meshData.textureMaps, ...partialMeshData.textureMaps }
+                            : obj.meshData.textureMaps
                     }
                 }
             }

@@ -1,0 +1,138 @@
+Date : 2026-04-28 00:09:48
+Directory : c:\Users\HP\AppData\Roaming\krita\pykrita
+Total : 77 files,  15313 codes, 1691 comments, 1021 blanks, all 18025 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| JSON           |          2 |      9,866 |          0 |          2 |      9,868 |
+| JavaScript     |         29 |      1,935 |      1,355 |        441 |      3,731 |
+| JavaScript JSX |         28 |      1,756 |        228 |        354 |      2,338 |
+| PostCSS        |          9 |      1,370 |         90 |        132 |      1,592 |
+| Python         |          5 |        303 |         18 |         77 |        398 |
+| YAML           |          2 |         46 |          0 |          2 |         48 |
+| Markdown       |          1 |         22 |          0 |         13 |         35 |
+| HTML           |          1 |         15 |          0 |          0 |         15 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                                | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                                   |         77 |     15,313 |      1,691 |      1,021 |     18,025 |
+| Krita 3D Tool Electron App                                                                                                          |         72 |     15,010 |      1,673 |        944 |     17,627 |
+| Krita 3D Tool Electron App (Files)                                                                                                  |          7 |      9,979 |          0 |         21 |     10,000 |
+| Krita 3D Tool Electron App\src                                                                                                      |         65 |      5,031 |      1,673 |        923 |      7,627 |
+| Krita 3D Tool Electron App\src\main                                                                                                 |         13 |      1,176 |      1,305 |        320 |      2,801 |
+| Krita 3D Tool Electron App\src\main (Files)                                                                                         |          1 |         67 |          6 |         25 |         98 |
+| Krita 3D Tool Electron App\src\main\core                                                                                            |         12 |      1,109 |      1,299 |        295 |      2,703 |
+| Krita 3D Tool Electron App\src\main\core (Files)                                                                                    |          1 |         13 |          2 |          6 |         21 |
+| Krita 3D Tool Electron App\src\main\core\ipc                                                                                        |          3 |        244 |        270 |         67 |        581 |
+| Krita 3D Tool Electron App\src\main\core\services                                                                                   |          8 |        852 |      1,027 |        222 |      2,101 |
+| Krita 3D Tool Electron App\src\preload                                                                                              |          1 |         17 |          0 |          3 |         20 |
+| Krita 3D Tool Electron App\src\renderer                                                                                             |         51 |      3,838 |        368 |        600 |      4,806 |
+| Krita 3D Tool Electron App\src\renderer (Files)                                                                                     |          1 |         15 |          0 |          0 |         15 |
+| Krita 3D Tool Electron App\src\renderer\src                                                                                         |         50 |      3,823 |        368 |        600 |      4,791 |
+| Krita 3D Tool Electron App\src\renderer\src (Files)                                                                                 |          3 |        149 |         10 |         31 |        190 |
+| Krita 3D Tool Electron App\src\renderer\src\_classes                                                                                |          3 |        170 |         10 |         34 |        214 |
+| Krita 3D Tool Electron App\src\renderer\src\_enums                                                                                  |          7 |         44 |          0 |          6 |         50 |
+| Krita 3D Tool Electron App\src\renderer\src\components                                                                              |          7 |        483 |        137 |         77 |        697 |
+| Krita 3D Tool Electron App\src\renderer\src\components (Files)                                                                      |          2 |         70 |          1 |         13 |         84 |
+| Krita 3D Tool Electron App\src\renderer\src\components\menus                                                                        |          2 |        186 |         33 |         21 |        240 |
+| Krita 3D Tool Electron App\src\renderer\src\components\project                                                                      |          3 |        227 |        103 |         43 |        373 |
+| Krita 3D Tool Electron App\src\renderer\src\context                                                                                 |          2 |        307 |          7 |         58 |        372 |
+| Krita 3D Tool Electron App\src\renderer\src\core                                                                                    |         21 |      1,477 |        123 |        292 |      1,892 |
+| Krita 3D Tool Electron App\src\renderer\src\core (Files)                                                                            |          6 |        607 |         84 |        139 |        830 |
+| Krita 3D Tool Electron App\src\renderer\src\core\Inspector                                                                          |          9 |        442 |         21 |         82 |        545 |
+| Krita 3D Tool Electron App\src\renderer\src\core\Inspector (Files)                                                                  |          4 |        313 |         13 |         65 |        391 |
+| Krita 3D Tool Electron App\src\renderer\src\core\Inspector\InputHelpers                                                             |          5 |        129 |          8 |         17 |        154 |
+| Krita 3D Tool Electron App\src\renderer\src\core\Scene                                                                              |          6 |        428 |         18 |         71 |        517 |
+| Krita 3D Tool Electron App\src\renderer\src\css                                                                                     |          7 |      1,193 |         81 |        102 |      1,376 |
+| bilinear_color_mixer_plugin                                                                                                         |          2 |         93 |          9 |         26 |        128 |
+| krita_3d_tool_plugin                                                                                                                |          3 |        210 |          9 |         51 |        270 |
++-------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                                                                            | language       | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\.prettierrc.yaml                                               | YAML           |          4 |          0 |          1 |          5 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\README.md                                                      | Markdown       |         22 |          0 |         13 |         35 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\electron-builder.yml                                           | YAML           |         42 |          0 |          1 |         43 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\electron.vite.config.mjs                                       | JavaScript     |         15 |          0 |          2 |         17 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\eslint.config.mjs                                              | JavaScript     |         30 |          0 |          2 |         32 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\package-lock.json                                              | JSON           |      9,819 |          0 |          1 |      9,820 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\package.json                                                   | JSON           |         47 |          0 |          1 |         48 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\main\core\ipc\dialogHandlers.js                            | JavaScript     |         52 |         25 |         13 |         90 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\main\core\ipc\fileHandlers.js                              | JavaScript     |        150 |        245 |         50 |        445 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\main\core\ipc\kritaHandlers.js                             | JavaScript     |         42 |          0 |          4 |         46 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\main\core\services\AssetService.js                         | JavaScript     |        182 |        179 |         52 |        413 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\main\core\services\DirectoryTreeService.js                 | JavaScript     |         73 |         69 |         19 |        161 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\main\core\services\GuidService.js                          | JavaScript     |          5 |         13 |          4 |         22 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\main\core\services\GuidTableService.js                     | JavaScript     |         57 |        144 |         15 |        216 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\main\core\services\MetaService.js                          | JavaScript     |         38 |         77 |         13 |        128 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\main\core\services\ProjectService.js                       | JavaScript     |        125 |        146 |         29 |        300 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\main\core\services\ReconciliationService.js                | JavaScript     |        146 |        208 |         40 |        394 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\main\core\services\SceneService.js                         | JavaScript     |        226 |        191 |         50 |        467 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\main\core\store.js                                         | JavaScript     |         13 |          2 |          6 |         21 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\main\index.js                                              | JavaScript     |         67 |          6 |         25 |         98 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\preload\index.js                                           | JavaScript     |         17 |          0 |          3 |         20 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\index.html                                        | HTML           |         15 |          0 |          0 |         15 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\App.jsx                                       | JavaScript JSX |         36 |          2 |         10 |         48 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\_classes\MaterialFactory.js                   | JavaScript     |         64 |          8 |         11 |         83 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\_classes\MeshFactory.js                       | JavaScript     |         31 |          0 |          6 |         37 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\_classes\ObjectFactory.js                     | JavaScript     |         75 |          2 |         17 |         94 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\_enums\CameraTypesEnum.js                     | JavaScript     |          4 |          0 |          0 |          4 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\_enums\GeometryTypesEnum.js                   | JavaScript     |         13 |          0 |          0 |         13 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\_enums\HandToolsEnum.js                       | JavaScript     |          6 |          0 |          1 |          7 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\_enums\LightTypesEnum.js                      | JavaScript     |          4 |          0 |          2 |          6 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\_enums\MaterialSidesEnum.js                   | JavaScript     |          5 |          0 |          0 |          5 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\_enums\MaterialTypesEnum.js                   | JavaScript     |          5 |          0 |          1 |          6 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\_enums\ObjectTypesEnum.js                     | JavaScript     |          7 |          0 |          2 |          9 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\components\ContextMenu.jsx                    | JavaScript JSX |         51 |          1 |         10 |         62 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\components\TitleBar.jsx                       | JavaScript JSX |         19 |          0 |          3 |         22 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\components\menus\HierarchyMenus.js            | JavaScript     |        127 |          0 |          2 |        129 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\components\menus\ToolbarMenus.js              | JavaScript     |         59 |         33 |         19 |        111 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\components\project\FileIcon.jsx               | JavaScript JSX |         38 |         15 |          6 |         59 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\components\project\ProjectGrid.jsx            | JavaScript JSX |         98 |         51 |         24 |        173 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\components\project\ProjectTree.jsx            | JavaScript JSX |         91 |         37 |         13 |        141 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\context\ProjectProvider.jsx                   | JavaScript JSX |         10 |          0 |          5 |         15 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\context\useStore.js                           | JavaScript     |        297 |          7 |         53 |        357 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Hierarchy.jsx                            | JavaScript JSX |        185 |         13 |         45 |        243 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Inspector.jsx                            | JavaScript JSX |         56 |          3 |         11 |         70 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Inspector\CameraSection.jsx              | JavaScript JSX |         56 |          2 |         13 |         71 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Inspector\InputHelpers\AxisInput.jsx     | JavaScript JSX |         32 |          4 |          7 |         43 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Inspector\InputHelpers\CheckboxInput.jsx | JavaScript JSX |         14 |          1 |          0 |         15 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Inspector\InputHelpers\ColorInput.jsx    | JavaScript JSX |         22 |          0 |          0 |         22 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Inspector\InputHelpers\NumberInput.jsx   | JavaScript JSX |         37 |          1 |          6 |         44 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Inspector\InputHelpers\Vector3Input.jsx  | JavaScript JSX |         24 |          2 |          4 |         30 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Inspector\LightSection.jsx               | JavaScript JSX |         52 |          0 |          7 |         59 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Inspector\ObjectSection.jsx              | JavaScript JSX |        163 |         11 |         41 |        215 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Inspector\TransformSection.jsx           | JavaScript JSX |         42 |          0 |          4 |         46 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Project.jsx                              | JavaScript JSX |        116 |         54 |         29 |        199 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Scene.jsx                                | JavaScript JSX |        146 |         14 |         38 |        198 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Scene\SceneIcons.jsx                     | JavaScript JSX |         59 |          4 |          4 |         67 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Scene\SceneNode.jsx                      | JavaScript JSX |        206 |         12 |         37 |        255 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Scene\SceneOverlay.css                   | PostCSS        |         73 |          1 |         12 |         86 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Scene\SceneOverlay.jsx                   | JavaScript JSX |         38 |          0 |          5 |         43 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Scene\SceneRenderer.jsx                  | JavaScript JSX |         15 |          0 |          3 |         18 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Scene\SceneTransformController.jsx       | JavaScript JSX |         37 |          1 |         10 |         48 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Viewport.jsx                             | JavaScript JSX |         11 |          0 |          4 |         15 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\core\Workspace.jsx                            | JavaScript JSX |         93 |          0 |         12 |        105 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\css\App.css                                   | PostCSS        |         44 |          2 |          6 |         52 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\css\ContextMenu.css                           | PostCSS        |         48 |          6 |          8 |         62 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\css\Docker.css                                | PostCSS        |          4 |          0 |          0 |          4 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\css\FlexLayout.css                            | PostCSS        |        693 |         22 |         18 |        733 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\css\Hierarchy.css                             | PostCSS        |         72 |          8 |         16 |         96 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\css\Inspector.css                             | PostCSS        |        164 |          8 |         26 |        198 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\css\Project.css                               | PostCSS        |        168 |         35 |         28 |        231 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\index.css                                     | PostCSS        |        104 |          8 |         18 |        130 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\Krita 3D Tool Electron App\src\renderer\src\main.jsx                                      | JavaScript JSX |          9 |          0 |          3 |         12 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\bilinear_color_mixer_plugin\__init__.py                                                   | Python         |          1 |          0 |          0 |          1 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\bilinear_color_mixer_plugin\bilinear_color_mixer_plugin.py                                | Python         |         92 |          9 |         26 |        127 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\krita_3d_tool_plugin\__init__.py                                                          | Python         |          6 |          0 |          2 |          8 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\krita_3d_tool_plugin\docker_widget.py                                                     | Python         |        127 |          7 |         34 |        168 |
+| c:\Users\HP\AppData\Roaming\krita\pykrita\krita_3d_tool_plugin\http_server.py                                                       | Python         |         77 |          2 |         15 |         94 |
+| Total                                                                                                                               |                |     15,313 |      1,691 |      1,021 |     18,025 |
++-------------------------------------------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+

@@ -10,6 +10,8 @@ import { SceneOverlay } from './Scene/SceneOverlay';
 import { HandTools } from '../_enums/HandToolsEnum';
 import { SceneTransformController } from './Scene/SceneTransformController';
 import { SceneRenderer } from './Scene/SceneRenderer';
+
+import { View } from '@react-three/drei';
 import './Scene/SceneOverlay.css';
 
 // function to match res between krita canvas and three.js sene
@@ -28,7 +30,7 @@ function KritaHighResExporter() {
             try {
                 // get res from krita
                 const resolution = await window.kritaAPI.getResolution();
-                
+
                 // If it returns null, Krita was closed after we connected!
                 if (!resolution) {
                     throw new Error("Connection lost");
@@ -66,7 +68,7 @@ function KritaHighResExporter() {
                 console.error("Export pipeline failed:", err);
                 alert("Connection to Krita lost! Please ensure Krita and the plugin are running.");
                 // Revert the UI state back to the red "Connect" button
-                setKritaConnected(false); 
+                setKritaConnected(false);
             } finally {
                 // reset the Zustand trigger so we can fire it again later
                 setExportingToKrita(false);
@@ -85,7 +87,7 @@ export function Scene() {
     const setExportingToKrita = useStore((state) => state.setExportingToKrita);
     const isKritaConnected = useStore((state) => state.isKritaConnected);
     const setKritaConnected = useStore((state) => state.setKritaConnected);
-    
+
     const orbitRef = useRef(null);
 
     const connectToKrita = async () => {
@@ -102,28 +104,28 @@ export function Scene() {
             if (!isExportingToKrita) {
                 const response = await window.kritaAPI.checkConnection();
                 setKritaConnected(response.connected);
-                
+
                 if (response.connected) {
                     // Command 1: Krita wants a snapshot
                     if (response.command === 'export') {
                         console.log("Krita requested a snapshot remotely! Triggering export...");
                         setExportingToKrita(true);
-                    } 
+                    }
                     // Command 2: Krita has sent layers to the app
                     else if (response.command === 'pull_layers') {
                         console.log("Krita queued layers! Fetching payload...");
                         const layers = await window.kritaAPI.getLayers();
-                        
+
                         // Push into your Zustand state
                         useStore.getState().setKritaLayers(layers);
-                        
+
                         // Optional: Alert the user so they know it arrived
                         alert(`Successfully imported ${layers.length} layers from Krita!`);
                         console.log("Received Layers:", layers);
                     }
                 }
             }
-        }, 2000); 
+        }, 2000);
 
         return () => clearInterval(heartbeat);
     }, [isExportingToKrita, setKritaConnected, setExportingToKrita]);
@@ -149,14 +151,14 @@ export function Scene() {
                         }
                     }}
                 >
-                    {!isKritaConnected 
-                        ? "Connect to Krita" 
+                    {!isKritaConnected
+                        ? "Connect to Krita"
                         : (isExportingToKrita ? "Sending..." : "Send Snapshot to Krita")
                     }
                 </button>
             </div>
 
-            <Canvas gl={{ preserveDrawingBuffer: true }}>
+            <Canvas>
 
                 <KritaHighResExporter />
 
@@ -189,6 +191,7 @@ export function Scene() {
                     <SceneTransformController />
                 </Suspense>
 
+                {/* <View.Port /> */}
             </Canvas>
         </div>
     );

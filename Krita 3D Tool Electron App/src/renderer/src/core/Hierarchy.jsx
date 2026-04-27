@@ -17,6 +17,11 @@ const HierarchyNode = ({ id, depth = 0 }) => {
     const setActiveMenu = useStore(state => state.setActiveMenu);
     const setActiveMenusObjectId = useStore(state => state.setActiveMenusObjectId);
 
+    
+
+
+
+
     const [expanded, setExpanded] = useState(true);
 
     if (!obj) return null;

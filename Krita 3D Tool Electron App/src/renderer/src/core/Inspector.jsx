@@ -6,11 +6,11 @@ import { TransformSection } from './Inspector/TransformSection';
 import { CameraSection } from './Inspector/CameraSection';
 import { LightSection } from './Inspector/LightSection';
 import "./../css/Inspector.css";
+import { ObjectSection } from './Inspector/ObjectSection';
 
 export function Inspector() {
     const selectedInspectorObjectId = useStore((state) => state.selectedInspectorObjectId);
     const objects = useStore((state) => state.objects);
-
     const activeObject = selectedInspectorObjectId ? objects[selectedInspectorObjectId] : null;
 
     if (!activeObject) {
@@ -29,12 +29,18 @@ export function Inspector() {
         subTypeStr = activeObject.lightData.lightType;
     }
 
+    let HeaderIcon = Box;
+    if (activeObject.type === ObjectTypes.GROUP) HeaderIcon = Layers;
+    else if (activeObject.type === ObjectTypes.CAMERA) HeaderIcon = Video;
+    else if (activeObject.type === ObjectTypes.TWO_D) HeaderIcon = Image;
+
+
     return (
         <div className="inspector-container">
             <div className="inspector-header">
                 {activeObject.type === ObjectTypes.GROUP ? <Layers size={16} /> :
                     activeObject.type === ObjectTypes.CAMERA ? <Video size={16} /> :
-                        <Box size={16} />}
+                        <HeaderIcon size={16} />}
 
                 <div className="inspector-header-text">
                     <span className="inspector-name">{activeObject.name}</span>
@@ -46,6 +52,10 @@ export function Inspector() {
 
             {/* Transform applies to Group, 3D Objects, Cameras, and Lights */}
             <TransformSection activeObject={activeObject} />
+
+            {(activeObject.type === ObjectTypes.THREE_D || activeObject.type === ObjectTypes.TWO_D) && (
+                <ObjectSection activeObject={activeObject} />
+            )}
 
             {/* Render Camera Section only if it's a camera */}
             {activeObject.type === ObjectTypes.CAMERA && (
