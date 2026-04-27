@@ -4,6 +4,8 @@ import { useStore } from "../context/useStore";
 import * as THREE from 'three';
 import { useRef, Suspense, useEffect } from 'react';
 
+import { OrthographicCamera } from '@react-three/drei';
+
 import { SceneOverlay } from './Scene/SceneOverlay';
 import { HandTools } from '../_enums/HandToolsEnum';
 import { SceneTransformController } from './Scene/SceneTransformController';
@@ -125,6 +127,7 @@ export function Scene() {
                     <SceneRenderer />
                     <SceneTransformController />
                 </Suspense>
+
             </Canvas>
         </div>
     );

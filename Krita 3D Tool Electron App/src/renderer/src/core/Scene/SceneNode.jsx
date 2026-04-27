@@ -5,6 +5,8 @@ import { HandTools } from '../../_enums/HandToolsEnum';
 import { GeometryTypes } from '../../_enums/GeometryTypesEnum';
 import { MaterialTypes } from '../../_enums/MaterialTypesEnum';
 import * as THREE from 'three';
+import { CameraTypes } from '../../_enums/CameraTypesEnum';
+import { LightTypes } from '../../_enums/LightTypesEnum';
 
 export function SceneNode({ id }) {
     const obj = useStore((state) => state.objects[id]);
@@ -97,6 +99,94 @@ export function SceneNode({ id }) {
                 </mesh>
             );
 
+        case ObjectTypes.CAMERA: {
+            const { cameraType, near, far, zoom, manual, aspect, fov, frustumSize } = obj.cameraData;
+
+            // Calculate orthographic bounds ONLY if manual is active and aspect is provided
+            const orthoBounds = (manual && aspect) ? {
+                left: -(frustumSize * aspect) / 2,
+                right: (frustumSize * aspect) / 2,
+                top: frustumSize / 2,
+                bottom: -frustumSize / 2,
+            } : {};
+
+            return (
+                <group
+                    name={id}
+                    position={pos}
+                    rotation={rot}
+                    scale={scl}
+                    visible={obj.visible}
+                    userData={{ isLocked: obj.locked }}
+                    onPointerDown={handlePointerDown}
+                >
+                    {cameraType === CameraTypes.PERSPECTIVE && (
+                        <PerspectiveCamera
+                            fov={fov}
+                            near={near}
+                            far={far}
+                            zoom={zoom}
+                            manual={manual}
+                            aspect={manual ? aspect : undefined}
+                        />
+                    )}
+
+                    {cameraType === CameraTypes.ORTHOGRAPHIC && (
+                        <OrthographicCamera
+                            near={near}
+                            far={far}
+                            zoom={zoom}
+                            manual={manual}
+                            {...orthoBounds}
+                        />
+                    )}
+                    {renderChildren()}
+                </group>
+            );
+        }
+
+        case ObjectTypes.LIGHT: {
+
+            const { lightType, targetId, color, intensity, castShadow } = obj.lightData;
+            
+
+            const targetObj = targetId ? useStore((state) => state.objects[targetId]) : null;
+            const targetPos = targetObj
+                ? [targetObj.transform.position.x, targetObj.transform.position.y, targetObj.transform.position.z]
+                : [0, -1, 0];
+
+
+            return (
+                <group
+                    name={id}
+                    position={pos}
+                    rotation={rot}
+                    scale={scl}
+                    visible={obj.visible}
+                    userData={{ isLocked: obj.locked }}
+                    onPointerDown={handlePointerDown}
+                >
+
+                    {lightType === LightTypes.AMBIENT && (
+                        <>
+                            <ambientLight intensity={intensity} color={color} />
+                        </>
+                    )}
+
+                    {lightType === LightTypes.DIRECTIONAL && (
+                        <directionalLight
+                        intensity={intensity}
+                        color={color}
+                        castShadow={castShadow}
+                        >
+                            <object3D attach="target" position={targetPos} />
+                        </directionalLight>
+                    )}
+                    
+                    {renderChildren()}
+                </group>
+            );
+        }
         default:
             return null;
     }

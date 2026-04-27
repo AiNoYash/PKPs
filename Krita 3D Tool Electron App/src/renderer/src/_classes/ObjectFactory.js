@@ -1,4 +1,6 @@
+import { CameraTypes } from "../_enums/CameraTypesEnum";
 import { GeometryTypes } from "../_enums/GeometryTypesEnum";
+import { LightTypes } from "../_enums/LightTypesEnum";
 import { ObjectTypes } from "../_enums/ObjectTypesEnum";
 import { generateMeshData } from "./MeshFactory";
 
@@ -15,16 +17,43 @@ const generateBaseNode = (name, type, parentId = null) => ({
 
 const generateCamera = (cameraType) => {
 
-
-    return {
+    const defaultCameraData = {
         far: 2000,
-        fov: 50,
         near: 0.1,
+        zoom: 1,
         manual: false,
         aspect: null,
     };
+
+    if (cameraType === CameraTypes.ORTHOGRAPHIC) {
+        return {
+            cameraType: CameraTypes.ORTHOGRAPHIC,
+            frustumSize: 10,
+            ...defaultCameraData,
+        };
+    }
+    else if (cameraType === CameraTypes.PERSPECTIVE) {
+        return {
+            cameraType: CameraTypes.PERSPECTIVE,
+            fov: 50,
+            ...defaultCameraData
+        };
+    }
 }
 
+function generateLight(lightType) {
+    const baseLight = {
+        lightType: lightType,
+        color: "#ffffff",
+        intensity: 1,
+    }
+
+    if (lightType === LightTypes.DIRECTIONAL) {
+        baseLight.castShadow = true;
+        baseLight.targetId = null;
+    }
+    return baseLight;
+}
 
 export const ObjectFactory = {
     createGroup: (name = 'New Group', parentId = null) => {
@@ -41,6 +70,23 @@ export const ObjectFactory = {
         let baseNode = generateBaseNode(name, ObjectTypes.CAMERA, parentId);
         baseNode.cameraData = generateCamera(cameraType);
 
+        return baseNode;
+    },
+
+
+    createLightObject: (name = 'Directional Light', lightType, parentId = null) => {
+        const baseNode = generateBaseNode(name, ObjectTypes.LIGHT, parentId);
+        baseNode.lightData = generateLight(lightType);
+
+
+        // ? if a light is a directional light then we return both a target node and light node but remember the target node is not yet child of light
+        if (lightType === LightTypes.DIRECTIONAL) {
+            const targetNode = generateBaseNode("Target", ObjectTypes.LIGHT_TARGET, null);
+            return { baseNode, targetNode };
+        }
+
+
+        // ? This is for ambient light
         return baseNode;
     }
 };
