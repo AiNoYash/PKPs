@@ -344,7 +344,7 @@ export const useStore = create((set) => ({
     }),
 
 
-    sKritaConnected: false,
+    isKritaConnected: false,
     setKritaConnected: (isConnected) => set({ isKritaConnected: isConnected }),
 
     isExportingToKrita: false,
