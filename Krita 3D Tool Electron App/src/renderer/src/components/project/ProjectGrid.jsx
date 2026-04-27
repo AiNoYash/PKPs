@@ -15,6 +15,8 @@
 // =============================================================================
 
 import { FileIcon } from "./FileIcon";
+import { useStore } from "../../context/useStore";
+const { invoke } = window.Project;
 
 // -----------------------------------------------------------------------------
 // _findNodeByPath(node, targetPath)
@@ -104,6 +106,9 @@ const GridTile = ({ node, onFolderClick, onFileClick, onContextMenu }) => {
 // Finds the selected folder node in the tree and renders its direct children.
 // -----------------------------------------------------------------------------
 export const ProjectGrid = ({ treeData, selectedFolderPath, onFolderNavigate }) => {
+  const setRootObjectIds = useStore((state) => state.setRootObjectIds);
+  const setObjects = useStore((state) => state.setObjects);
+  
   // No project open yet.
   if (!treeData) {
     return (
@@ -147,8 +152,22 @@ export const ProjectGrid = ({ treeData, selectedFolderPath, onFolderNavigate }) 
   }
 
   // Scalability hooks — no-ops for now, wired in for future interactions.
-  const handleFileClick = (node) => {
-    // TODO: select asset, display properties in Inspector panel
+  const handleFileClick = async (node) => {
+    if(node.fileType !== "scene"){
+      return;
+    }
+
+    const filePath = node.path;
+    const response = await invoke("scene:load", {filePath});
+
+    if(!(response.success)){
+      console.error("Error Occured: ", response.error);
+    }
+
+    setRootObjectIds(response.sceneData.rootObjectIds);
+    setObjects(response.sceneData.objects);
+
+    console.log("Scene loaded successfully!");
   };
 
   const handleContextMenu = (e, node) => {

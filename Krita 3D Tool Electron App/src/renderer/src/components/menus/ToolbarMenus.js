@@ -76,13 +76,40 @@ const handleFileImport = async () => {
     }
 };
 
+const handleSaveAs = async () => {
+    const projectPath = useStore.getState().activeProjectPath;
+    if(!projectPath){
+        throw Error("No active project found, open / create a project first");
+    }
+
+    let response;
+    try{
+        response = await invoke('dialog:saveAsScene', {projectPath});
+    }catch(err){
+        console.error("handleSaveAs: IPC call failed:", err);
+        return;
+    }
+
+    if (!response) return; // User cancelled
+
+    if (!response.success) {
+        console.error("handleSaveAs: Save failed —", response.error);
+        return;
+    }
+
+    console.log("Scene saved successfully:", response.data);
+    
+    useStore.getState().triggerTreeRefresh();
+    console.log("Tree refreshed!");
+}
+
 export const fileMenuItems = [
     { label: 'New Project...', shortcut: 'Ctrl+Shift+N', action: handleNewProject },
     { label: 'Open Project...', shortcut: 'Ctrl+O', action: handleOpenProject },
     { label: 'Import File...', shortcut: 'Ctrl+I', action: handleFileImport },
     { type: 'divider' },
     { label: 'Save', shortcut: 'Ctrl+S', action: () => console.log('Saved') },
-    { label: 'Save As...', shortcut: 'Ctrl+Shift+S', action: () => console.log('Saved As') },
+    { label: 'Save As...', shortcut: 'Ctrl+Shift+S', action: handleSaveAs },
     { type: 'divider' },
     { label: 'Exit', shortcut: 'Alt+F4', action: () => { window.Application.quitApp(); } }
     // ! We need to have a function here where we check if any data is not saved or something

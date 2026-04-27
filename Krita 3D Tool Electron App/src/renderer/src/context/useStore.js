@@ -8,6 +8,15 @@ export const useStore = create((set) => ({
 
     activeFileTree: null,
     setActiveFileTree: (newActiveFileTree) => { set({ activeFileTree: newActiveFileTree }) },
+    isGridModeOn: false,
+    setisGridModeOn: () => set((state) => ({isGridModeOn: !(state.isGridModeOn)})),
+
+    gridX: 0,
+    gridY: 0,
+    gridZ: 0,
+    setGridX: (val) => set({ gridX: val }),
+    setGridY: (val) => set({ gridY: val }),
+    setGridZ: (val) => set({ gridZ: val }),
 
     activeMenu: null,
     setActiveMenu: (newActiveMenu) => { set({ activeMenu: newActiveMenu }) },
@@ -35,6 +44,7 @@ export const useStore = create((set) => ({
     selectInspectorObject: (id) => set({ selectedInspectorObjectId: id }),
 
     rootObjectIds: ['character-base-group', 'ground-plane'],
+    setRootObjectIds: (newRootObjectIds) => { set({ rootObjectIds: newRootObjectIds }) },
 
     objects: {
         'character-base-group': {
@@ -115,6 +125,7 @@ export const useStore = create((set) => ({
             }
         }
     },
+    setObjects: (newObjects) => { set({ objects: newObjects }) },
 
     updateTransform: (id, partialTransform) => set((state) => {
         const obj = state.objects[id];

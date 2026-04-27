@@ -1,5 +1,8 @@
 import { dialog, ipcMain } from 'electron';
 import path from 'path';
+import { loadTable } from '../services/GuidTableService';
+import { createScene, saveScene } from '../services/SceneService';
+import { useStore } from '../../../renderer/src/context/useStore';
 
 export function setupProjectHandlers() {
     ipcMain.handle('dialog:newProject', async () => {
@@ -85,6 +88,70 @@ export function setupProjectHandlers() {
     // response.response is the index of the button clicked.
     // 0 = Cancel, 1 = Delete
     return { confirmed: response.response === 1 };
+    });
+
+    ipcMain.handle("dialog:saveAsScene", async (_event, { projectPath }) => {
+        let result;
+        try {
+            result = await dialog.showSaveDialog({
+                defaultPath: `${projectPath}/scenes/untitled`,
+                title: 'Save Current Scene',
+            });
+        } catch (err) {
+            console.error("dialog:saveAsScene: Failed to open dialog:", err);
+            return { success: false, error: "Failed to open save dialog." };
+        }
+    
+        if (result.canceled || !result.filePath) return null; // User cancelled
+    
+        const chosenPath = result.filePath;
+        const fileName = path.basename(chosenPath);
+    
+        let table;
+        try {
+            table = loadTable(projectPath);
+        } catch (err) {
+            console.error("dialog:saveAsScene: loadTable failed:", err);
+            return { success: false, error: "Failed to load project table." };
+        }
+    
+        let res;
+        try {
+            res = createScene(projectPath, fileName, table);
+        } catch (err) {
+            console.error("dialog:saveAsScene: createScene threw:", err);
+            return { success: false, error: "Failed to create scene." };
+        }
+    
+        if (!res?.success) {
+            console.error("dialog:saveAsScene: createScene returned failure:", res);
+            return { success: false, error: "Scene creation was unsuccessful." };
+        }
+    
+        try {
+            res.sceneData.rootObjectIds = useStore.getState().rootObjectIds;
+            res.sceneData.objects       = useStore.getState().objects;
+            res.sceneData.lastModified  = new Date().toISOString();
+        } catch (err) {
+            console.error("dialog:saveAsScene: Failed to populate scene data:", err);
+            return { success: false, error: "Failed to read scene state." };
+        }
+    
+        let saveResponse;
+        try {
+            saveResponse = saveScene(projectPath, res.guid, res.sceneData);
+        } catch (err) {
+            console.error("dialog:saveAsScene: saveScene threw:", err);
+            return { success: false, error: "Failed to save scene to disk." };
+        }
+    
+        if (!saveResponse?.success) {
+            console.error("dialog:saveAsScene: saveScene returned failure:", saveResponse);
+            return { success: false, error: "Scene could not be written to disk." };
+        }
+    
+        console.log("dialog:saveAsScene: Scene saved successfully:", fileName);
+        return { success: true, data: { fileName, guid: res.guid } };
     });
 
 }
