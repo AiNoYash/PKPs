@@ -1,5 +1,5 @@
 import { transformControlRef, useStore } from '../../context/useStore';
-import { TransformControls } from '@react-three/drei';
+import { TransformControls, useTexture } from '@react-three/drei';
 import { ObjectTypes } from '../../_enums/ObjectTypesEnum';
 import { HandTools } from '../../_enums/HandToolsEnum';
 import { GeometryTypes } from '../../_enums/GeometryTypesEnum';
@@ -11,11 +11,10 @@ import { PerspectiveCamera } from '@react-three/drei';
 import { OrthographicCamera } from '@react-three/drei';
 import { useRef, useEffect } from 'react';
 import { useThree } from '@react-three/fiber';
+import { Suspense } from 'react';
+import { MaterialWithTextures } from './MaterialWithTexture';
+import { AsyncMaterialLoader } from './AsyncMaterialLoader';
 
-
-const textureBase64Map = {
-
-};
 
 /**
  * A dedicated component for directional lights that correctly wires up
@@ -112,23 +111,7 @@ export function SceneNode({ id }) {
         selectInspectorObject(id);
     };
 
-    const renderMaterial = () => {
-        // Convert string 'FrontSide' / 'DoubleSide' to actual THREE constants
-        const props = { ...obj.meshData.materialProps, side: THREE[obj.meshData.materialProps.side] };
 
-        switch (obj.meshData.materialType) {
-            case MaterialTypes.BASIC_MATERIAL:
-
-            
-
-                return <meshBasicMaterial {...props}  />;
-            case MaterialTypes.PHYSICAL_MATERIAL:
-                return <meshPhysicalMaterial {...props} />;
-            case MaterialTypes.STANDARD_MATERIAL:
-            default:
-                return <meshStandardMaterial {...props} />;
-        }
-    };
 
     switch (obj.type) {
         case ObjectTypes.GROUP:
@@ -171,7 +154,7 @@ export function SceneNode({ id }) {
                     {obj.meshData.geometryType === GeometryTypes.TORUS && <torusGeometry args={obj.meshData.geometryArgs} />}
                     {obj.meshData.geometryType === GeometryTypes.TORUS_KNOT && <torusKnotGeometry args={obj.meshData.geometryArgs} />}
 
-                    {renderMaterial()}
+                    <AsyncMaterialLoader obj={obj} />
                     {renderChildren()}
                 </mesh>
             );
