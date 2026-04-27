@@ -5,7 +5,8 @@ import { Inspector } from './Inspector';
 import { Project } from './Project';
 import { Layout, Model } from 'flexlayout-react';
 import '../css/FlexLayout.css';
-
+import "../css/Docker.css";
+import { Viewport } from './Viewport';
 
 const initialLayout = {
     global: {
@@ -37,7 +38,10 @@ const initialLayout = {
                     {
                         type: "tabset",
                         weight: 50,
-                        children: [{ type: "tab", name: "Scene", component: "scene" }]
+                        children: [
+                            { type: "tab", name: "Scene", component: "scene" },
+                            { type: "tab", name: "Viewport", component: "viewport" }
+                        ]
                     },
                     {
                         type: "tabset",
@@ -83,6 +87,7 @@ export function Workspace() {
         if (component === "scene") return <Scene />;
         if (component === "inspector") return <Inspector />;
         if (component === "project") return <Project />;
+        if (component === "viewport") return <Viewport />;
 
         return null;
     };

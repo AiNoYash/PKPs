@@ -1,10 +1,238 @@
+import { useState } from "react";
 import { useStore } from "../context/useStore";
+import { Eye, EyeOff, Lock, Unlock, ChevronDown, ChevronRight, Box, Cuboid, Image as ImageIcon, Layers } from "lucide-react";
+import { ContextMenu } from "../components/ContextMenu";
+
+import "../css/Hierarchy.css";
+import { emptySpaceMenuItems, objectMenuItems } from "../components/menus/HierarchyMenus";
+
+const HierarchyNode = ({ id, depth = 0 }) => {
+    const obj = useStore((state) => state.objects[id]);
+    const selectedObjectId = useStore((state) => state.selectedObjectId);
+    const selectObject = useStore((state) => state.selectObject);
+    const selectedInspectorObjectId = useStore((state) => state.selectedInspectorObjectId);
+    const selectInspectorObject = useStore((state) => state.selectInspectorObject);
+    const toggleVisibility = useStore((state) => state.toggleVisibility);
+    const toggleLock = useStore((state) => state.toggleLock);
+    const setActiveMenu = useStore(state => state.setActiveMenu);
+    const setActiveMenusObjectId = useStore(state => state.setActiveMenusObjectId);
+
+    const [expanded, setExpanded] = useState(true);
+
+    if (!obj) return null;
+
+    const isSelected = selectedInspectorObjectId === id;
+    const hasChildren = obj.childrenIds && obj.childrenIds.length > 0;
+    
+    const handleSelect = (e) => {
+        e.stopPropagation();
+
+        if (obj.locked || !obj.visible) {
+            selectInspectorObject(id);
+            return;
+        }
+
+        selectInspectorObject(id);
+        selectObject(id);
+    };
+
+    const handleToggleExpand = (e) => {
+        e.stopPropagation();
+        setExpanded(!expanded);
+    };
+
+    return (
+        <div className="hierarchy-node-container" onContextMenu={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setActiveMenusObjectId(obj.id);
+            setActiveMenu({ items: objectMenuItems, x: e.clientX, y: e.clientY });
+        }}>
+            <div
+                className={`hierarchy-row ${isSelected ? "selected" : ""}`}
+                onClick={handleSelect}
+            >
+                {/* 1. Fixed Icons Column */}
+                <div className="hierarchy-icons">
+                    <span
+                        className={`icon-toggle ${!obj.visible ? "active" : ""}`}
+                        onClick={(e) => { e.stopPropagation(); toggleVisibility(id); }}
+                        title="Toggle Visibility"
+                    >
+                        {obj.visible ? <Eye size={14} /> : <EyeOff size={14} />}
+                    </span>
+                    <span
+                        className={`icon-toggle ${obj.locked ? "active" : ""}`}
+                        onClick={(e) => { e.stopPropagation(); toggleLock(id); }}
+                        title="Toggle Lock"
+                    >
+                        {obj.locked ? <Lock size={14} /> : <Unlock size={14} />}
+                    </span>
+                </div>
+
+                {/* 2. Dynamic Indentation Spacer */}
+                <div style={{ width: `${depth * 14}px`, flexShrink: 0 }} />
+
+                {/* 3. Node Content */}
+                <div className="hierarchy-expander" onClick={handleToggleExpand}>
+                    {hasChildren ? (
+                        expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />
+                    ) : (
+                        <span style={{ width: 14 }} />
+                    )}
+                </div>
+
+                <Box size={14} className="hierarchy-type-icon" />
+
+                <span className="hierarchy-name">{obj.name}</span>
+            </div>
+
+            {expanded && hasChildren && (
+                <div className="hierarchy-children">
+                    {obj.childrenIds.map((childId) => (
+                        <HierarchyNode key={childId} id={childId} depth={depth + 1} />
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
 
 
 export function Hierarchy() {
+    const rootObjectIds = useStore((state) => state.rootObjectIds);
+    const setAllVisibility = useStore((state) => state.setAllVisibility);
+    const setAllLock = useStore((state) => state.setAllLock);
+    
+    // NEW: Fetch Krita Layers from the store
+    const kritaLayers = useStore((state) => state.kritaLayers);
+
+    const setActiveMenu = useStore(state => state.setActiveMenu);
+
+    const [sceneExpanded, setSceneExpanded] = useState(true);
+    const [sceneVisible, setSceneVisible] = useState(true);
+    const [sceneLocked, setSceneLocked] = useState(false);
+    
+    // NEW: Collapse/Expand state for the imported layers
+    const [kritaExpanded, setKritaExpanded] = useState(true);
+
+    const handleSceneVisibility = (e) => {
+        e.stopPropagation();
+        const newState = !sceneVisible;
+        setSceneVisible(newState);
+        setAllVisibility(newState);
+    };
+
+    const handleSceneLock = (e) => {
+        e.stopPropagation();
+        const newState = !sceneLocked;
+        setSceneLocked(newState);
+        setAllLock(newState);
+    };
+
     return (
-        <>
-      
-        </>
+        <div className="docker-content-container hierarchy-container" onContextMenu={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setActiveMenu({ items: emptySpaceMenuItems, x: e.clientX, y: e.clientY });
+        }}>
+            <div className="hierarchy-node-container">
+                {/* SCENE HEADER NODE */}
+                <div
+                    className="hierarchy-row scene-header"
+                    onClick={() => setSceneExpanded(!sceneExpanded)}
+                >
+                    <div className="hierarchy-icons">
+                        <span
+                            className={`icon-toggle ${!sceneVisible ? "active" : ""}`}
+                            onClick={handleSceneVisibility}
+                            title="Toggle Scene Visibility"
+                        >
+                            {sceneVisible ? <Eye size={14} /> : <EyeOff size={14} />}
+                        </span>
+                        <span
+                            className={`icon-toggle ${sceneLocked ? "active" : ""}`}
+                            onClick={handleSceneLock}
+                            title="Toggle Scene Lock"
+                        >
+                            {sceneLocked ? <Lock size={14} /> : <Unlock size={14} />}
+                        </span>
+                    </div>
+
+                    <div style={{ width: `4px`, flexShrink: 0 }} />
+
+                    <div className="hierarchy-expander">
+                        {sceneExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                    </div>
+
+                    <Cuboid size={14} className="hierarchy-type-icon scene-icon" />
+
+                    <span className="hierarchy-name" style={{ fontWeight: '600' }}>Main Scene</span>
+                </div>
+
+                {/* SCENE CHILDREN */}
+                {sceneExpanded && (
+                    <div className="hierarchy-children">
+                        {rootObjectIds.map((id) => (
+                            <HierarchyNode key={id} id={id} depth={1} />
+                        ))}
+                    </div>
+                )}
+            </div>
+
+            {/* NEW: KRITA LAYERS SECTION (Only visible when layers exist) */}
+            {kritaLayers && kritaLayers.length > 0 && (
+                <div className="hierarchy-node-container" style={{ marginTop: '12px' }}>
+                    
+                    {/* KRITA ASSETS HEADER */}
+                    <div
+                        className="hierarchy-row scene-header"
+                        onClick={() => setKritaExpanded(!kritaExpanded)}
+                    >
+                        <div className="hierarchy-icons">
+                            {/* Invisible placeholders to keep column alignment perfect */}
+                            <span className="icon-toggle" style={{ visibility: 'hidden' }}><Eye size={14} /></span>
+                            <span className="icon-toggle" style={{ visibility: 'hidden' }}><Lock size={14} /></span>
+                        </div>
+
+                        <div style={{ width: `4px`, flexShrink: 0 }} />
+
+                        <div className="hierarchy-expander">
+                            {kritaExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                        </div>
+
+                        {/* Distinct UI icon for 2D assets */}
+                        <Layers size={14} className="hierarchy-type-icon scene-icon" color="#7EA656" />
+
+                        <span className="hierarchy-name" style={{ fontWeight: '600', color: '#7EA656' }}>Krita Layers</span>
+                    </div>
+
+                    {/* KRITA ASSETS LIST */}
+                    {kritaExpanded && (
+                        <div className="hierarchy-children">
+                            {kritaLayers.map((layer, index) => (
+                                <div key={`krita-layer-${index}`} className="hierarchy-row">
+                                    <div className="hierarchy-icons">
+                                        <span className="icon-toggle" style={{ visibility: 'hidden' }}><Eye size={14} /></span>
+                                        <span className="icon-toggle" style={{ visibility: 'hidden' }}><Lock size={14} /></span>
+                                    </div>
+
+                                    {/* Indent depth 1 */}
+                                    <div style={{ width: `14px`, flexShrink: 0 }} />
+
+                                    <div className="hierarchy-expander">
+                                        <span style={{ width: 14 }} />
+                                    </div>
+
+                                    <ImageIcon size={14} className="hierarchy-type-icon" />
+
+                                    <span className="hierarchy-name">{layer.name}</span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
+        </div>
     );
 }

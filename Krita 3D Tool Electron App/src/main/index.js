@@ -5,7 +5,9 @@ import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import { ipcMain } from 'electron';
 import { setupStoreHandlers } from './core/store';
-import { setupProjectHandlers } from './core/fs';
+import { setupProjectHandlers } from './core/ipc/dialogHandlers.js';
+import "./core/ipc/fileHandlers.js";
+import { setupKritaHandlers } from './core/ipc/kritaHandlers.js';
 
 let mainWindow = null;
 
@@ -31,6 +33,7 @@ function createWindow() {
     mainWindow.show();
   });
 
+  
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
@@ -79,7 +82,7 @@ if (!gotTheLock) {
 
   });
 
-
+  setupKritaHandlers();
 
   app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {

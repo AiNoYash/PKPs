@@ -9,6 +9,7 @@
     width: 100%;
     height: 33px;
     /* ? All the ui is actually going to scale by 1.25(because of my pc's screen scaling lol) so 33 will become 1.25 * 33 for me and i think this looks good enought lol*/
+    padding-left: var(--os-based-titlebar-padding-left);
     background-color: var(--color-bg-title);
     display: flex;
     justify-content: start;
@@ -16,7 +17,7 @@
     app-region: drag;
 }
 
-.title-bar > .logo{
+.title-bar>.logo {
     height: 100%;
     width: auto;
     margin-left: 4px;
@@ -45,6 +46,7 @@
 .title-bar>.controls>button:hover {
     background-color: var(--color-bg-app);
 }
+
 .title-bar>.controls>button.active {
     background-color: var(--color-bg-app);
 }

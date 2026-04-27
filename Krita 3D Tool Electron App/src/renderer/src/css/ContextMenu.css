@@ -2,7 +2,7 @@
 .menu-overlay {
     position: fixed;
     inset: 0;
-    z-index: 999
+    z-index: 999998
 }
 
 /* Context Menu Container */
@@ -12,7 +12,7 @@
     border: 1px solid var(--color-border);
     padding: 4px 0;
     min-width: 180px;
-    z-index: 1000;
+    z-index: 999999;
     /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); */
     border-radius: 4px;
 }

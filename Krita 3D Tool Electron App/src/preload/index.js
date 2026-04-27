@@ -4,6 +4,17 @@ contextBridge.exposeInMainWorld('Application', {
   quitApp: () => ipcRenderer.send('quit-app'),
   storeGet: (key) => ipcRenderer.invoke('store:get', key),
   storeSet: (key, val) => ipcRenderer.invoke('store:set', key, val),
-  openDirectoryDialog: () => ipcRenderer.invoke('dialog:openDirectory')
+  openDirectoryDialog: () => ipcRenderer.invoke('dialog:openDirectory'),
+  system: process.platform,
 });
 
+contextBridge.exposeInMainWorld('Project', {
+  invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
+});
+
+contextBridge.exposeInMainWorld('kritaAPI', {
+  checkConnection: () => ipcRenderer.invoke('krita:check-connection'), 
+  getResolution: () => ipcRenderer.invoke('krita:get-resolution'),
+  sendSnapshot: (imageData) => ipcRenderer.invoke('krita:send-snapshot', imageData),
+  getLayers: () => ipcRenderer.invoke('krita:get-layers') // NEW
+});
