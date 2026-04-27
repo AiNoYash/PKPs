@@ -10,10 +10,12 @@ class ServerThread(QThread):
     def __init__(self):
         super().__init__()
         self.request_export = False
-        self.layer_payload = None # Stores base64 layers
+        self.layer_payload = None 
         self.command = "none"
+        self.canvas_res = {"width": 1920, "height": 1080} # Store safe data
 
     def trigger_export_request(self):
+        self.canvas_res = {"width": w, "height": h} # Receive from main thread
         self.request_export = True
         
     def queue_layer_export(self, payload):
@@ -31,10 +33,11 @@ class ServerThread(QThread):
                 self.send_header('Access-Control-Allow-Headers', 'Content-Type')
                 self.end_headers()
 
+          
             def do_GET(self):
                 if self.path == '/resolution':
-                    doc = Krita.instance().activeDocument()
-                    res = {"width": doc.width(), "height": doc.height()} if doc else {"width": 1920, "height": 1080}
+                    # Read the pre-cached resolution instead of calling Krita.instance()
+                    res = self.thread.canvas_res
                     self.send_response(200)
                     self.send_header('Content-type', 'application/json')
                     self.send_header('Access-Control-Allow-Origin', '*')
