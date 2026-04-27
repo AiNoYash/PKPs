@@ -404,10 +404,52 @@ const getAssetPath = (projectPath, guid, table) => {
   };
 };
 
+// get base64 corresponding to texture file path (absolute)
+const getBase64 = (filePath) => {
+  if (!fs.existsSync(filePath)) {
+    return {
+      success: false,
+      base64: null,
+      error: null
+    };
+  }
+
+  try {
+    const imageBuffer = fs.readFileSync(filePath);
+    const base64String = imageBuffer.toString('base64');
+
+    // Derive the MIME type from the file extension
+    const ext = path.extname(filePath).toLowerCase().slice(1);
+    const mimeTypeMap = {
+      jpg: 'image/jpeg',
+      jpeg: 'image/jpeg',
+      png: 'image/png',
+      gif: 'image/gif',
+      webp: 'image/webp',
+      svg: 'image/svg+xml',
+      bmp: 'image/bmp',
+    };
+    const mimeType = mimeTypeMap[ext] || 'application/octet-stream';
+
+    return {
+      success: true,
+      base64: `data:${mimeType};base64,${base64String}`,
+      error: null
+    };
+  } catch (error) {
+    return {
+      success: false,
+      base64: null,
+      error: error.message,
+    };
+  }
+}
+
 export {
   determineAssetType,
   determineDestinationFolder,
   importAsset,
   deleteAsset,
   getAssetPath,
+  getBase64
 };
