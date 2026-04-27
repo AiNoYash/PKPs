@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useStore } from "../context/useStore";
-import { Eye, EyeOff, Lock, Unlock, ChevronDown, ChevronRight, Box, Cuboid } from "lucide-react";
+import { Eye, EyeOff, Lock, Unlock, ChevronDown, ChevronRight, Box, Cuboid, Image as ImageIcon, Layers } from "lucide-react";
 import { ContextMenu } from "../components/ContextMenu";
 
 import "../css/Hierarchy.css";
@@ -17,14 +17,12 @@ const HierarchyNode = ({ id, depth = 0 }) => {
     const setActiveMenu = useStore(state => state.setActiveMenu);
     const setActiveMenusObjectId = useStore(state => state.setActiveMenusObjectId);
 
-
     const [expanded, setExpanded] = useState(true);
 
     if (!obj) return null;
 
     const isSelected = selectedInspectorObjectId === id;
     const hasChildren = obj.childrenIds && obj.childrenIds.length > 0;
-
     
     const handleSelect = (e) => {
         e.stopPropagation();
@@ -42,7 +40,6 @@ const HierarchyNode = ({ id, depth = 0 }) => {
         e.stopPropagation();
         setExpanded(!expanded);
     };
-
 
     return (
         <div className="hierarchy-node-container" onContextMenu={(e) => {
@@ -106,13 +103,18 @@ export function Hierarchy() {
     const rootObjectIds = useStore((state) => state.rootObjectIds);
     const setAllVisibility = useStore((state) => state.setAllVisibility);
     const setAllLock = useStore((state) => state.setAllLock);
+    
+    // NEW: Fetch Krita Layers from the store
+    const kritaLayers = useStore((state) => state.kritaLayers);
 
     const setActiveMenu = useStore(state => state.setActiveMenu);
-
 
     const [sceneExpanded, setSceneExpanded] = useState(true);
     const [sceneVisible, setSceneVisible] = useState(true);
     const [sceneLocked, setSceneLocked] = useState(false);
+    
+    // NEW: Collapse/Expand state for the imported layers
+    const [kritaExpanded, setKritaExpanded] = useState(true);
 
     const handleSceneVisibility = (e) => {
         e.stopPropagation();
@@ -140,7 +142,6 @@ export function Hierarchy() {
                     className="hierarchy-row scene-header"
                     onClick={() => setSceneExpanded(!sceneExpanded)}
                 >
-                    {/* Fixed Icons Column for Scene */}
                     <div className="hierarchy-icons">
                         <span
                             className={`icon-toggle ${!sceneVisible ? "active" : ""}`}
@@ -158,7 +159,6 @@ export function Hierarchy() {
                         </span>
                     </div>
 
-                    {/* Scene has 0 indentation, but we add a tiny gap to match the children's flow */}
                     <div style={{ width: `4px`, flexShrink: 0 }} />
 
                     <div className="hierarchy-expander">
@@ -179,6 +179,60 @@ export function Hierarchy() {
                     </div>
                 )}
             </div>
+
+            {/* NEW: KRITA LAYERS SECTION (Only visible when layers exist) */}
+            {kritaLayers && kritaLayers.length > 0 && (
+                <div className="hierarchy-node-container" style={{ marginTop: '12px' }}>
+                    
+                    {/* KRITA ASSETS HEADER */}
+                    <div
+                        className="hierarchy-row scene-header"
+                        onClick={() => setKritaExpanded(!kritaExpanded)}
+                    >
+                        <div className="hierarchy-icons">
+                            {/* Invisible placeholders to keep column alignment perfect */}
+                            <span className="icon-toggle" style={{ visibility: 'hidden' }}><Eye size={14} /></span>
+                            <span className="icon-toggle" style={{ visibility: 'hidden' }}><Lock size={14} /></span>
+                        </div>
+
+                        <div style={{ width: `4px`, flexShrink: 0 }} />
+
+                        <div className="hierarchy-expander">
+                            {kritaExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                        </div>
+
+                        {/* Distinct UI icon for 2D assets */}
+                        <Layers size={14} className="hierarchy-type-icon scene-icon" color="#7EA656" />
+
+                        <span className="hierarchy-name" style={{ fontWeight: '600', color: '#7EA656' }}>Krita Layers</span>
+                    </div>
+
+                    {/* KRITA ASSETS LIST */}
+                    {kritaExpanded && (
+                        <div className="hierarchy-children">
+                            {kritaLayers.map((layer, index) => (
+                                <div key={`krita-layer-${index}`} className="hierarchy-row">
+                                    <div className="hierarchy-icons">
+                                        <span className="icon-toggle" style={{ visibility: 'hidden' }}><Eye size={14} /></span>
+                                        <span className="icon-toggle" style={{ visibility: 'hidden' }}><Lock size={14} /></span>
+                                    </div>
+
+                                    {/* Indent depth 1 */}
+                                    <div style={{ width: `14px`, flexShrink: 0 }} />
+
+                                    <div className="hierarchy-expander">
+                                        <span style={{ width: 14 }} />
+                                    </div>
+
+                                    <ImageIcon size={14} className="hierarchy-type-icon" />
+
+                                    <span className="hierarchy-name">{layer.name}</span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

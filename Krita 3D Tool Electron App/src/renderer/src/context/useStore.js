@@ -295,12 +295,15 @@ export const useStore = create((set) => ({
         };
     }),
 
-    // Add this to your Zustand store in useStore.js
+
+    sKritaConnected: false,
+    setKritaConnected: (isConnected) => set({ isKritaConnected: isConnected }),
+
     isExportingToKrita: false,
     setExportingToKrita: (isExporting) => set({ isExportingToKrita: isExporting }),
 
-
+    kritaLayers: [],
+    setKritaLayers: (layers) => set({ kritaLayers: layers }),
 }));
-
 
 export const transformControlRef = { current: null };

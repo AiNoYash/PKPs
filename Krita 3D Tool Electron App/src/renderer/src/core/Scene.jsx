@@ -18,6 +18,7 @@ function KritaHighResExporter() {
 
     const isExportingToKrita = useStore((state) => state.isExportingToKrita);
     const setExportingToKrita = useStore((state) => state.setExportingToKrita);
+    const setKritaConnected = useStore((state) => state.setKritaConnected);
 
     useEffect(() => {
         const captureAndSend = async () => {
@@ -26,7 +27,14 @@ function KritaHighResExporter() {
             console.log("Fetching Krita resolution via IPC...");
             try {
                 // get res from krita
-                const { width, height } = await window.kritaAPI.getResolution();
+                const resolution = await window.kritaAPI.getResolution();
+                
+                // If it returns null, Krita was closed after we connected!
+                if (!resolution) {
+                    throw new Error("Connection lost");
+                }
+
+                const { width, height } = resolution;
 
                 const originalWidth = gl.domElement.width;
                 const originalHeight = gl.domElement.height;
@@ -40,7 +48,7 @@ function KritaHighResExporter() {
                 gl.render(scene, camera);
                 const dataUrl = gl.domElement.toDataURL('image/png');
 
-                //  shrink back to normal UI size
+                // shrink back to normal UI size
                 gl.setPixelRatio(originalPixelRatio);
                 gl.setSize(originalWidth, originalHeight, false);
 
@@ -52,18 +60,21 @@ function KritaHighResExporter() {
                 if (success) {
                     console.log("Snapshot successfully injected into Krita!");
                 } else {
-                    console.error("Main process reported failure to send snapshot.");
+                    throw new Error("Send failed");
                 }
             } catch (err) {
                 console.error("Export pipeline failed:", err);
+                alert("Connection to Krita lost! Please ensure Krita and the plugin are running.");
+                // Revert the UI state back to the red "Connect" button
+                setKritaConnected(false); 
             } finally {
-                //  reset the Zustand trigger so we can fire it again later
+                // reset the Zustand trigger so we can fire it again later
                 setExportingToKrita(false);
             }
         };
 
         captureAndSend();
-    }, [isExportingToKrita, gl, scene, camera, setExportingToKrita]);
+    }, [isExportingToKrita, gl, scene, camera, setExportingToKrita, setKritaConnected]);
 
     return null;
 }
@@ -72,7 +83,50 @@ export function Scene() {
     const selectedHandTool = useStore((state) => state.selectedHandTool);
     const isExportingToKrita = useStore((state) => state.isExportingToKrita);
     const setExportingToKrita = useStore((state) => state.setExportingToKrita);
+    const isKritaConnected = useStore((state) => state.isKritaConnected);
+    const setKritaConnected = useStore((state) => state.setKritaConnected);
+    
     const orbitRef = useRef(null);
+
+    const connectToKrita = async () => {
+        const response = await window.kritaAPI.checkConnection();
+        if (response.connected) {
+            setKritaConnected(true);
+        } else {
+            alert("Could not connect to Krita. Is the application open and the plugin running?");
+        }
+    };
+
+    useEffect(() => {
+        const heartbeat = setInterval(async () => {
+            if (!isExportingToKrita) {
+                const response = await window.kritaAPI.checkConnection();
+                setKritaConnected(response.connected);
+                
+                if (response.connected) {
+                    // Command 1: Krita wants a snapshot
+                    if (response.command === 'export') {
+                        console.log("Krita requested a snapshot remotely! Triggering export...");
+                        setExportingToKrita(true);
+                    } 
+                    // Command 2: Krita has sent layers to the app
+                    else if (response.command === 'pull_layers') {
+                        console.log("Krita queued layers! Fetching payload...");
+                        const layers = await window.kritaAPI.getLayers();
+                        
+                        // Push into your Zustand state
+                        useStore.getState().setKritaLayers(layers);
+                        
+                        // Optional: Alert the user so they know it arrived
+                        alert(`Successfully imported ${layers.length} layers from Krita!`);
+                        console.log("Received Layers:", layers);
+                    }
+                }
+            }
+        }, 2000); 
+
+        return () => clearInterval(heartbeat);
+    }, [isExportingToKrita, setKritaConnected, setExportingToKrita]);
 
     return (
         <div className='docker-content-container' style={{ position: 'relative' }}>
@@ -83,15 +137,22 @@ export function Scene() {
                 </div>
 
                 <button
-                    className="krita-export-btn"
+                    className={isKritaConnected ? "krita-export-btn" : "krita-connect-btn"}
                     disabled={isExportingToKrita}
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        setExportingToKrita(true);
+                        if (!isKritaConnected) {
+                            connectToKrita();
+                        } else {
+                            setExportingToKrita(true);
+                        }
                     }}
                 >
-                    {isExportingToKrita ? "Sending..." : "Send HD Snapshot"}
+                    {!isKritaConnected 
+                        ? "Connect to Krita" 
+                        : (isExportingToKrita ? "Sending..." : "Send Snapshot to Krita")
+                    }
                 </button>
             </div>
 

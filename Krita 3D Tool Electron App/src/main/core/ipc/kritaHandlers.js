@@ -1,20 +1,36 @@
 import { ipcMain } from 'electron';
 
 export function setupKritaHandlers() {
-    // Handler to get Krita's current document resolution
-    ipcMain.handle('krita:get-resolution', async () => {
+    ipcMain.handle('krita:check-connection', async () => {
         try {
-            // Using standard Node fetch (available in modern Electron)
-            const res = await fetch('http://127.0.0.1:5000/resolution');
-            return await res.json();
+            const res = await fetch('http://127.0.0.1:5000/ping');
+            if (!res.ok) return { connected: false };
+            const data = await res.json();
+            return { connected: true, command: data.command };
         } catch (err) {
-            console.error("IPC: Krita resolution fetch failed:", err);
-            // Fallback resolution if Krita isn't open or responding
-            return { width: 1920, height: 1080 }; 
+            return { connected: false };
         }
     });
 
-    // Handler to send the heavy base64 image data to Krita
+    ipcMain.handle('krita:get-resolution', async () => {
+        try {
+            const res = await fetch('http://127.0.0.1:5000/resolution');
+            return await res.json();
+        } catch (err) {
+            return null; 
+        }
+    });
+
+    ipcMain.handle('krita:get-layers', async () => {
+        try {
+            const res = await fetch('http://127.0.0.1:5000/layers');
+            return await res.json();
+        } catch (err) {
+            console.error("IPC: Failed to fetch layers", err);
+            return [];
+        }
+    });
+
     ipcMain.handle('krita:send-snapshot', async (event, imageData) => {
         try {
             const res = await fetch('http://127.0.0.1:5000/snapshot', {
@@ -24,7 +40,6 @@ export function setupKritaHandlers() {
             });
             return res.ok;
         } catch (err) {
-            console.error("IPC: Krita snapshot send failed:", err);
             return false;
         }
     });

@@ -9,12 +9,12 @@ contextBridge.exposeInMainWorld('Application', {
 });
 
 contextBridge.exposeInMainWorld('Project', {
-  // Generic invoke — used by the Project panel and any future IPC calls
-  // that don't need a dedicated wrapper here.
   invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
 });
 
 contextBridge.exposeInMainWorld('kritaAPI', {
+  checkConnection: () => ipcRenderer.invoke('krita:check-connection'), 
   getResolution: () => ipcRenderer.invoke('krita:get-resolution'),
-  sendSnapshot: (imageData) => ipcRenderer.invoke('krita:send-snapshot', imageData)
+  sendSnapshot: (imageData) => ipcRenderer.invoke('krita:send-snapshot', imageData),
+  getLayers: () => ipcRenderer.invoke('krita:get-layers') // NEW
 });
