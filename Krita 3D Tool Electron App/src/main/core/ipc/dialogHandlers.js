@@ -2,7 +2,6 @@ import { dialog, ipcMain } from 'electron';
 import path from 'path';
 import { loadTable } from '../services/GuidTableService';
 import { createScene, saveScene } from '../services/SceneService';
-import { useStore } from '../../../renderer/src/context/useStore';
 
 export function setupProjectHandlers() {
     ipcMain.handle('dialog:newProject', async () => {
@@ -10,7 +9,7 @@ export function setupProjectHandlers() {
             title: 'Create New Project',
             buttonLabel: 'Create Project',
             message: 'Choose a location and name for your new project folder',
-            properties: ['createDirectory', 'showHiddenFiles'] 
+            properties: ['createDirectory', 'showHiddenFiles']
         });
 
         if (result.canceled || !result.filePath) {
@@ -30,7 +29,7 @@ export function setupProjectHandlers() {
             buttonLabel: 'Open Project',
             properties: ['openDirectory'] // Restrict selection to folders only
         });
-        
+
         if (result.canceled || result.filePaths.length === 0) {
             return null; // User clicked Cancel
         }
@@ -44,7 +43,7 @@ export function setupProjectHandlers() {
             buttonLabel: 'Import',
             properties: ['openFile'] // Restrict selection to folders only
         });
-        
+
         if (result.canceled || result.filePaths.length === 0) {
             return null; // User clicked Cancel
         }
@@ -75,22 +74,22 @@ export function setupProjectHandlers() {
     //   confirmed = false → user clicked Cancel
     // -----------------------------------------------------------------------------
     ipcMain.handle("dialog:showConfirmation", async (_event, { title, message, detail }) => {
-    const response = await dialog.showMessageBox({
-        type: "warning",
-        title,
-        message,
-        detail,
-        buttons: ["Cancel", "Delete"],
-        defaultId: 0,   // Cancel is the default — user must actively choose Delete
-        cancelId: 0,    // Pressing Escape = Cancel
-    });
-    
-    // response.response is the index of the button clicked.
-    // 0 = Cancel, 1 = Delete
-    return { confirmed: response.response === 1 };
+        const response = await dialog.showMessageBox({
+            type: "warning",
+            title,
+            message,
+            detail,
+            buttons: ["Cancel", "Delete"],
+            defaultId: 0,   // Cancel is the default — user must actively choose Delete
+            cancelId: 0,    // Pressing Escape = Cancel
+        });
+
+        // response.response is the index of the button clicked.
+        // 0 = Cancel, 1 = Delete
+        return { confirmed: response.response === 1 };
     });
 
-    ipcMain.handle("dialog:saveAsScene", async (_event, { projectPath }) => {
+    ipcMain.handle("dialog:saveAsScene", async (_event, { projectPath, sceneState }) => {
         let result;
         try {
             result = await dialog.showSaveDialog({
@@ -101,12 +100,12 @@ export function setupProjectHandlers() {
             console.error("dialog:saveAsScene: Failed to open dialog:", err);
             return { success: false, error: "Failed to open save dialog." };
         }
-    
+
         if (result.canceled || !result.filePath) return null; // User cancelled
-    
+
         const chosenPath = result.filePath;
         const fileName = path.basename(chosenPath);
-    
+
         let table;
         try {
             table = loadTable(projectPath);
@@ -114,7 +113,7 @@ export function setupProjectHandlers() {
             console.error("dialog:saveAsScene: loadTable failed:", err);
             return { success: false, error: "Failed to load project table." };
         }
-    
+
         let res;
         try {
             res = createScene(projectPath, fileName, table);
@@ -122,21 +121,21 @@ export function setupProjectHandlers() {
             console.error("dialog:saveAsScene: createScene threw:", err);
             return { success: false, error: "Failed to create scene." };
         }
-    
+
         if (!res?.success) {
             console.error("dialog:saveAsScene: createScene returned failure:", res);
             return { success: false, error: "Scene creation was unsuccessful." };
         }
-    
+
         try {
-            res.sceneData.rootObjectIds = useStore.getState().rootObjectIds;
-            res.sceneData.objects       = useStore.getState().objects;
-            res.sceneData.lastModified  = new Date().toISOString();
+            res.sceneData.rootObjectIds = sceneState.rootObjectIds;
+            res.sceneData.objects = sceneState.objects;
+            res.sceneData.lastModified = new Date().toISOString();
         } catch (err) {
             console.error("dialog:saveAsScene: Failed to populate scene data:", err);
             return { success: false, error: "Failed to read scene state." };
         }
-    
+
         let saveResponse;
         try {
             saveResponse = saveScene(projectPath, res.guid, res.sceneData);
@@ -144,12 +143,12 @@ export function setupProjectHandlers() {
             console.error("dialog:saveAsScene: saveScene threw:", err);
             return { success: false, error: "Failed to save scene to disk." };
         }
-    
+
         if (!saveResponse?.success) {
             console.error("dialog:saveAsScene: saveScene returned failure:", saveResponse);
             return { success: false, error: "Scene could not be written to disk." };
         }
-    
+
         console.log("dialog:saveAsScene: Scene saved successfully:", fileName);
         return { success: true, data: { fileName, guid: res.guid } };
     });
