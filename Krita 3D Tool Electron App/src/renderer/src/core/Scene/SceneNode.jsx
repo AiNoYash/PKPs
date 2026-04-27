@@ -7,6 +7,9 @@ import { MaterialTypes } from '../../_enums/MaterialTypesEnum';
 import * as THREE from 'three';
 import { CameraTypes } from '../../_enums/CameraTypesEnum';
 import { LightTypes } from '../../_enums/LightTypesEnum';
+import { PerspectiveCamera } from '@react-three/drei';
+import { OrthographicCamera } from '@react-three/drei';
+
 
 export function SceneNode({ id }) {
     const obj = useStore((state) => state.objects[id]);
@@ -28,7 +31,7 @@ export function SceneNode({ id }) {
     };
 
     const handlePointerDown = (e) => {
-        if (obj.locked) return;
+        if (obj.locked || selectedHandTool === HandTools.PAN) return;
 
         if (transformControlRef.current && transformControlRef.current.axis !== null) {
             return;
@@ -81,6 +84,8 @@ export function SceneNode({ id }) {
                     visible={obj.visible}
                     userData={{ isLocked: obj.locked }}
                     onPointerDown={handlePointerDown}
+                    castShadow
+                    receiveShadow
                 >
                     {obj.meshData.geometryType === GeometryTypes.BOX && <boxGeometry args={obj.meshData.geometryArgs} />}
                     {obj.meshData.geometryType === GeometryTypes.CAPSULE && <capsuleGeometry args={obj.meshData.geometryArgs} />}

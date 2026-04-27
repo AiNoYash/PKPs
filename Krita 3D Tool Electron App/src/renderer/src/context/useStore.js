@@ -257,9 +257,48 @@ export const useStore = create((set) => ({
             selectedObjectId: null
         };
     }),
+
+    updateCameraData: (id, partialCameraData) => set((state) => {
+        const obj = state.objects[id];
+        if (!obj || !obj.cameraData) return state;
+
+        return {
+            objects: {
+                ...state.objects,
+                [id]: {
+                    ...obj,
+                    cameraData: {
+                        ...obj.cameraData,
+                        ...partialCameraData
+                    }
+                }
+            }
+        };
+    }),
+
+
+    updateLightData: (id, partialLightData) => set((state) => {
+        const obj = state.objects[id];
+        if (!obj || !obj.lightData) return state;
+
+        return {
+            objects: {
+                ...state.objects,
+                [id]: {
+                    ...obj,
+                    lightData: {
+                        ...obj.lightData,
+                        ...partialLightData
+                    }
+                }
+            }
+        };
+    }),
+
     // Add this to your Zustand store in useStore.js
     isExportingToKrita: false,
     setExportingToKrita: (isExporting) => set({ isExportingToKrita: isExporting }),
+
 
 }));
 
