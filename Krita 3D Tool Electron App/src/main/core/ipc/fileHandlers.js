@@ -8,6 +8,7 @@
 //                                         currently open project.
 // =============================================================================
 
+import fs from "fs";
 import { ipcMain } from "electron";
 import { 
   createProject, 
@@ -249,13 +250,35 @@ ipcMain.handle("scene:save", async (_event, { guid, sceneData }) => {
 // Returns: Full result from SceneService.loadScene(), including the full
 //          sceneData object that the frontend loads into Zustand.
 // -----------------------------------------------------------------------------
-ipcMain.handle("scene:load", async (_event, { guid }) => {
+ipcMain.handle("scene:load", async (_event, { filePath }) => {
   const guard = _requireActiveProject();
   if (guard) return guard;
 
-  const result = loadScene(activeProjectPath, guid, activeTable);
+  if(!fs.existsSync(filePath)){
+    return {
+      success: false,
+      sceneData: null,
+      error: "file does not exist",
+    }
+  }
 
-  return result;
+  let result;
+  try{
+    const raw = fs.readFileSync(filePath);
+    result = JSON.parse(raw);
+  }catch(err){
+    return {
+      success: false,
+      sceneData: null,
+      error: "could not read file content"
+    }
+  }
+
+  return {
+    success: true,
+    sceneData: result,
+    error: null
+  }
 });
 
 // -----------------------------------------------------------------------------

@@ -83,22 +83,7 @@ const _buildInitialSceneData = (guid, sceneName) => {
     name: sceneName,
     createdAt: new Date().toISOString(),
     lastModified: new Date().toISOString(),
-    camera: {
-      position: { x: 0, y: 2, z: 5 },
-      rotation: { x: -10, y: 0, z: 0 },
-      fov: 60,
-    },
-    lighting: {
-      ambientIntensity: 0.4,
-      lights: [
-        {
-          type: "directional",
-          position: { x: 5, y: 10, z: 5 },
-          intensity: 1.0,
-          color: "#ffffff",
-        },
-      ],
-    },
+    rootObjectIds: [],
     objects: {},
   };
 };

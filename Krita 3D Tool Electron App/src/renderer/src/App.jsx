@@ -11,13 +11,23 @@ function App() {
   const activeMenu = useStore(state => state.activeMenu);
   const setActiveMenu = useStore(state => state.setActiveMenu);
 
+  const setTitlebarPadding = (state) => {
+    if (window.Application.system !== "darwin") return;
+    const padding = state === 'fullscreen' ? '0px' : '70px';
+    document.documentElement.style.setProperty('--os-based-titlebar-padding-left', padding);
+  };
+
   useEffect(() => {
-    if (window.Application.system === "darwin") {
-      document.documentElement.style.setProperty('--os-based-titlebar-padding-left', '100px');
-    }
+    if (window.Application.system !== "darwin") return;
 
+    // Set initial state
+    window.electronAPI.getWindowState().then(setTitlebarPadding);
 
-  });
+    // Listen for changes and grab the cleanup fn
+    const cleanup = window.electronAPI.onWindowStateChange(setTitlebarPadding);
+
+    return cleanup;
+  }, []); // ← empty deps, runs once on mount
 
   return (
     <>

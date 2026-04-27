@@ -28,6 +28,19 @@ function createWindow() {
     }
   });
 
+  mainWindow.on('enter-full-screen', () => {
+    mainWindow.webContents.send('window-state-change', 'fullscreen');
+  });
+
+  mainWindow.on('leave-full-screen', () => {
+    mainWindow.webContents.send('window-state-change', 'windowed');
+  });
+
+  // Let renderer query the initial state on load
+  ipcMain.handle('get-window-state', () => {
+    return mainWindow.isFullScreen() ? 'fullscreen' : 'windowed';
+  });
+
   mainWindow.once('ready-to-show', () => {
     mainWindow.maximize();
     mainWindow.show();
