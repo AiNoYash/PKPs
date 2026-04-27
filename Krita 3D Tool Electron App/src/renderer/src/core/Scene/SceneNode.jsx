@@ -9,6 +9,63 @@ import { CameraTypes } from '../../_enums/CameraTypesEnum';
 import { LightTypes } from '../../_enums/LightTypesEnum';
 import { PerspectiveCamera } from '@react-three/drei';
 import { OrthographicCamera } from '@react-three/drei';
+import { useRef, useEffect } from 'react';
+import { useThree } from '@react-three/fiber';
+
+
+/**
+ * A dedicated component for directional lights that correctly wires up
+ * the Three.js target in world space. The target object3D must live in
+ * the scene (not as a child of the light) for its world matrix to be
+ * resolved by the renderer.
+ */
+function DirectionalLightWithTarget({ intensity, color, castShadow, targetObj }) {
+    const lightRef = useRef();
+    const { scene } = useThree();
+
+    useEffect(() => {
+        const light = lightRef.current;
+        if (!light) return;
+
+        // Add the target to the scene so Three.js computes its world matrix
+        scene.add(light.target);
+
+        return () => {
+            scene.remove(light.target);
+        };
+    }, [scene]);
+
+    // Update target position whenever the store's target object moves
+    useEffect(() => {
+        const light = lightRef.current;
+        if (!light) return;
+
+        if (targetObj) {
+            light.target.position.set(
+                targetObj.transform.position.x,
+                targetObj.transform.position.y,
+                targetObj.transform.position.z
+            );
+        } else {
+            // Default: point straight down
+            light.target.position.set(0, 0, 0);
+        }
+        light.target.updateMatrixWorld();
+    }, [
+        targetObj?.transform.position.x,
+        targetObj?.transform.position.y,
+        targetObj?.transform.position.z,
+    ]);
+
+    return (
+        <directionalLight
+            ref={lightRef}
+            intensity={intensity}
+            color={color}
+            castShadow={castShadow}
+        />
+    );
+}
 
 
 export function SceneNode({ id }) {
@@ -160,16 +217,6 @@ export function SceneNode({ id }) {
 
             const { lightType, targetId, color, intensity, castShadow } = obj.lightData;
 
-
-            const localTargetPos = targetObj
-                ? [
-                    targetObj.transform.position.x - obj.transform.position.x,
-                    targetObj.transform.position.y - obj.transform.position.y,
-                    targetObj.transform.position.z - obj.transform.position.z
-                ]
-                : [0, -1, 0];
-
-
             return (
                 <group
                     name={id}
@@ -188,13 +235,12 @@ export function SceneNode({ id }) {
                     )}
 
                     {lightType === LightTypes.DIRECTIONAL && (
-                        <directionalLight
+                        <DirectionalLightWithTarget
                             intensity={intensity}
                             color={color}
                             castShadow={castShadow}
-                        >
-                            <object3D attach="target" position={localTargetPos} />
-                        </directionalLight>
+                            targetObj={targetObj}
+                        />
                     )}
 
                     {renderChildren()}
