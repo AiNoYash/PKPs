@@ -65,3 +65,22 @@
     color: var(--color-text-secondary);
     cursor: not-allowed;
 }
+.krita-connect-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    pointer-events: auto;
+    padding: 12px 20px;
+    background-color: #C95D5D; 
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.2s ease;
+}
+
+.krita-connect-btn:hover {
+    background-color: #a84b4b;
+}

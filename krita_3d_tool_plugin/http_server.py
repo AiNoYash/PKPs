@@ -31,6 +31,14 @@ class ServerThread(QThread):
                     self.send_header('Access-Control-Allow-Origin', '*')
                     self.end_headers()
                     self.wfile.write(json.dumps(res).encode('utf-8'))
+                    
+                # ping endpoint for connection checks
+                elif self.path == '/ping':
+                    self.send_response(200)
+                    self.send_header('Content-type', 'application/json')
+                    self.send_header('Access-Control-Allow-Origin', '*')
+                    self.end_headers()
+                    self.wfile.write(b'{"status": "connected"}')
 
             def do_POST(self):
                 if self.path == '/snapshot':

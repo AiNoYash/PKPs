@@ -257,10 +257,11 @@ export const useStore = create((set) => ({
             selectedObjectId: null
         };
     }),
-    // Add this to your Zustand store in useStore.js
+    sKritaConnected: false,
+    setKritaConnected: (isConnected) => set({ isKritaConnected: isConnected }),
+
     isExportingToKrita: false,
     setExportingToKrita: (isExporting) => set({ isExportingToKrita: isExporting }),
-
 }));
 
 

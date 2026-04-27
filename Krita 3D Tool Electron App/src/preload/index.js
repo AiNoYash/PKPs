@@ -15,6 +15,7 @@ contextBridge.exposeInMainWorld('Project', {
 });
 
 contextBridge.exposeInMainWorld('kritaAPI', {
+  checkConnection: () => ipcRenderer.invoke('krita:check-connection'), 
   getResolution: () => ipcRenderer.invoke('krita:get-resolution'),
   sendSnapshot: (imageData) => ipcRenderer.invoke('krita:send-snapshot', imageData)
 });
