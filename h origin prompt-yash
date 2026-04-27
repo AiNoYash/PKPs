@@ -1,0 +1,74 @@
+[33mf4e8b28[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mprompt-yash[m[33m, [m[1;31morigin/prompt-yash[m[33m)[m this is the first time i am updating socket codes
+[33m0732b1d[m OMG I AM SO DONE TEXTURES ARE NOW WORKIGN
+[33mc67cddf[m Merge branch 'main' of https://github.com/AiNoYash/PKPs into prompt-yash
+[33me4b03ad[m asndaksda
+[33m6ec8328[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #2 from AiNoYash/project-section
+[33mfc6b4aa[m Merge branch 'main' of https://github.com/AiNoYash/PKPs into prompt-yash
+[33m6707dec[m a
+[33m4987efc[m fix: directional light
+[33mdd34d94[m Merge pull request #1 from AiNoYash/prompt-yash
+[33m0a8f460[m implement: backend api to get base64 corresponding to texture file path.
+[33m87aeb00[m asdasda
+[33m5d64d74[m Merge branch 'project-section' of https://github.com/AiNoYash/PKPs into prompt-yash
+[33m9f29bea[m ok this is good no
+[33mfee6634[m inspector for camera and group complete
+[33m16fa337[m Added export layers functionality to krita, added ui for layers to show up in electron app
+[33me32e386[m Aded bidirectional communication with pings, and button in docker to import
+[33m78e9cb9[m Added connection checks between for app and krita
+[33m2f7b0a7[m n
+[33m4a4a3a1[m added external camera and lights
+[33m4c2e8f4[m adding cameras
+[33m12cbd3f[m omg hierarchy works now
+[33m109489e[m Merge branch 'prompt-yash' of https://github.com/AiNoYash/PKPs into prompt-yash
+[33m73872ac[m was making hierarchy
+[33m54c6b63[m added zustland logic and minor tweaks
+[33mb15ea41[m  establish secure bridge and update CSP for local Krita server
+[33mc3784d1[m css: add dedicated classes for Krita export button
+[33m75fb192[m add Krita export trigger boolean to Zustand store
+[33mfa4e4aa[m Added resolution matching between krita and three.js scene
+[33m39fbf48[m Refactor: Break Krita 3D Tool plugin into modular files (HTTP server, Docker UI, and entry point)
+[33m40cff59[m Added ipc, and button to scene to send snapshot
+[33mf2f3894[m so far stuff is working
+[33mb3b2906[m[33m ([m[1;31morigin/project-section[m[33m)[m feat: update fetchDirectoryTree dependencies to include treeRefreshCounter
+[33m20a19a8[m feat: add asset renaming functionality and confirmation dialog in backend.
+[33m7df966a[m feat: completed file import functionality with asset type determination and tree refresh
+[33m14163f3[m Merge branch 'project-section' of https://github.com/AiNoYash/PKPs into prompt-yash
+[33m7b16e79[m Scene renderer works now
+[33m3192119[m scene renderer complete i think
+[33mccc9932[m WIP: add file import functionality to project handlers and update toolbar menu
+[33m3d0d759[m b
+[33mad0e66d[m feat: implement active project path management in Zustand store and update project handlers
+[33m3450c6a[m a
+[33m766b8e4[m refactor: replace fs project handlers with dialog handlers for new and open project functionality
+[33m43b22e3[m fix: shifted from commonJs to ES module for uniformity.
+[33md8a7995[m WIP: project section
+[33mda2c02e[m  a
+[33m10a6e61[m a
+[33m4d8fa90[m a
+[33m292d558[m a
+[33m749a66c[m a
+[33m8aae5f7[m a
+[33m80c52d2[m a
+[33mf6213ba[m a
+[33m88b524e[m a
+[33ma0b4947[m a
+[33m6c6da56[m bilinear color mixer
+[33mf38d38d[m temp
+[33mfcc4bb2[m Merge branch 'file-handling' of https://github.com/AiNoYash/PKPs into prompt-yash
+[33me6ff6f5[m[33m ([m[1;31morigin/file-handling[m[33m)[m feat: Implement file management module.
+[33m52bb3f4[m New branch for setting temp code to give to gemini
+[33m129eb4e[m[33m ([m[1;32mmain[m[33m)[m New project tamplate again omg
+[33m3ae6a3a[m added zustand and some other changes
+[33m1cc93d8[m Ready to use tamplate project 2
+[33m60f77bb[m Ready to use tamplate project 2
+[33mc070825[m usable tamplate project
+[33mbd1a5da[m Working Context Menus and Toolbar
+[33m0b75e6c[m Now with window controls ui added
+[33m4225ea3[m Window styling
+[33m06c40ee[m Working base
+[33m532dd2f[m Merge branch 'main' of https://github.com/AiNoYash/PKPs
+[33mdb04185[m Base
+[33m9bd2122[m Delete .gitignore
+[33m779ca7a[m Delete Krita 3D Tool Electron App directory
+[33m341887a[m New readme
+[33m60b22c8[m Initial commit: Setup Krita tools monorepo
