@@ -86,13 +86,7 @@ class ThreeDToolDocker(DockWidget):
         self.export_layers_btn.setEnabled(False)
         
     def request_import(self):
-        # 1. Grab resolution safely on the main GUI thread
-        doc = Krita.instance().activeDocument()
-        w = doc.width() if doc else 1920
-        h = doc.height() if doc else 1080
-        
-        # 2. Pass it into the thread
-        self.server_thread.trigger_export_request(w, h)
+        self.server_thread.trigger_export_request()
         self.feedback_label.setText("<font color='orange'>Requesting 3D snapshot...</font>")
 
     # NEW: Logic for generating base64 layers
