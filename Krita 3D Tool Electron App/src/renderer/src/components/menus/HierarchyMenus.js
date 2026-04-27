@@ -1,9 +1,8 @@
 import { useStore } from "../../context/useStore";
 import { ObjectFactory } from "../../_classes/ObjectFactory";
 import { GeometryTypes } from "../../_enums/GeometryTypesEnum";
-
-// ! Never do this as it will give stale states
-// const state = useStore.getState(); 
+import { CameraTypes } from "../../_enums/CameraTypesEnum";
+import { LightTypes } from "../../_enums/LightTypesEnum";
 
 export const emptySpaceMenuItems = [
     {
@@ -39,16 +38,23 @@ export const emptySpaceMenuItems = [
             {
                 label: "Camera",
                 children: [
-                    { label: "Perspective", action: () => console.log("Add Perspective Camera") },
-                    { label: "Orthographic", action: () => console.log("Add Orthographic Camera") }
+                    { label: "Perspective", action: () => useStore.getState().addRootObject(ObjectFactory.createCameraObject('Perspective', CameraTypes.PERSPECTIVE)) },
+                    { label: "Orthographic", action: () => useStore.getState().addRootObject(ObjectFactory.createCameraObject('Orthographic', CameraTypes.ORTHOGRAPHIC)) }
                 ]
             },
             {
                 label: "Light",
                 children: [
-                    { label: "Ambient", action: () => console.log("Add Ambient Light") },
-                    { label: "Directional", action: () => console.log("Add Directional Light") },
-                    { label: "Point", action: () => console.log("Add Point Light") }
+                    { label: "Ambient", action: () => useStore.getState().addRootObject(ObjectFactory.createLightObject('Ambient', LightTypes.AMBIENT)) },
+                    { 
+                        label: "Directional", 
+                        action: () => {
+                            const store = useStore.getState();
+                            const { baseNode, targetNode } = ObjectFactory.createLightObject('Directional Light', LightTypes.DIRECTIONAL);
+                            store.addRootObject(baseNode);
+                            store.addChildObject(baseNode.id, targetNode);
+                        } 
+                    }
                 ]
             },
             { type: "divider" },
@@ -56,8 +62,6 @@ export const emptySpaceMenuItems = [
         ]
     }
 ];
-
-
 
 export const objectMenuItems = [
     {
@@ -93,16 +97,24 @@ export const objectMenuItems = [
             {
                 label: "Camera",
                 children: [
-                    { label: "Perspective", action: () => console.log("Add Perspective Camera") },
-                    { label: "Orthographic", action: () => console.log("Add Orthographic Camera") }
+                    { label: "Perspective", action: () => useStore.getState().addChildObject(useStore.getState().activeMenusObjectId, ObjectFactory.createCameraObject('Perspective', CameraTypes.PERSPECTIVE)) },
+                    { label: "Orthographic", action: () => useStore.getState().addChildObject(useStore.getState().activeMenusObjectId, ObjectFactory.createCameraObject('Orthographic', CameraTypes.ORTHOGRAPHIC)) }
                 ]
             },
             {
                 label: "Light",
                 children: [
-                    { label: "Ambient", action: () => console.log("Add Ambient Light") },
-                    { label: "Directional", action: () => console.log("Add Directional Light") },
-                    { label: "Point", action: () => console.log("Add Point Light") }
+                    { label: "Ambient", action: () => useStore.getState().addChildObject(useStore.getState().activeMenusObjectId, ObjectFactory.createLightObject('Ambient', LightTypes.AMBIENT)) },
+                    { 
+                        label: "Directional", 
+                        action: () => {
+                            const store = useStore.getState();
+                            const parentId = store.activeMenusObjectId;
+                            const { baseNode, targetNode } = ObjectFactory.createLightObject('Directional Light', LightTypes.DIRECTIONAL);
+                            store.addChildObject(parentId, baseNode);
+                            store.addChildObject(baseNode.id, targetNode);
+                        } 
+                    }
                 ]
             },
             { type: "divider" },
