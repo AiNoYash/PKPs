@@ -87,16 +87,33 @@ export function Scene() {
     const setKritaConnected = useStore((state) => state.setKritaConnected);
     
     const orbitRef = useRef(null);
-
-    // Manual connection check for the smart button
+    
     const connectToKrita = async () => {
-        const connected = await window.kritaAPI.checkConnection();
-        if (connected) {
+        const response = await window.kritaAPI.checkConnection();
+        if (response.connected) {
             setKritaConnected(true);
         } else {
             alert("Could not connect to Krita. Is the application open and the plugin running?");
         }
     };
+
+    // Background Heartbeat Watchdog & Command Listener
+    useEffect(() => {
+        const heartbeat = setInterval(async () => {
+            if (!isExportingToKrita) {
+                const response = await window.kritaAPI.checkConnection();
+                setKritaConnected(response.connected);
+                
+                // NEW: Listen for Krita's import request
+                if (response.connected && response.command === 'export') {
+                    console.log("Krita requested a snapshot remotely! Triggering export...");
+                    setExportingToKrita(true);
+                }
+            }
+        }, 2000); 
+
+        return () => clearInterval(heartbeat);
+    }, [isExportingToKrita, setKritaConnected, setExportingToKrita]);
 
     return (
         <div className='docker-content-container' style={{ position: 'relative' }}>

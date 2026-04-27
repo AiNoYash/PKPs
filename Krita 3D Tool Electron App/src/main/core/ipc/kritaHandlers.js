@@ -4,9 +4,13 @@ export function setupKritaHandlers() {
     ipcMain.handle('krita:check-connection', async () => {
         try {
             const res = await fetch('http://127.0.0.1:5000/ping');
-            return res.ok;
+            if (!res.ok) return { connected: false };
+            
+            // NEW: Parse JSON to fetch the command attached by Krita
+            const data = await res.json();
+            return { connected: true, command: data.command };
         } catch (err) {
-            return false;
+            return { connected: false };
         }
     });
 
@@ -16,7 +20,7 @@ export function setupKritaHandlers() {
             return await res.json();
         } catch (err) {
             console.error("IPC: Krita resolution fetch failed:", err);
-            return null; // Return null to signal a dropped connection
+            return null; 
         }
     });
 

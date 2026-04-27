@@ -1,13 +1,20 @@
 # plugin/http_server.py
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-
 from krita import Krita #type:ignore
 from PyQt5.QtCore import QThread, pyqtSignal #type:ignore
 
 class ServerThread(QThread):
-    # Signal to pass the base64 string safely back to the main Krita thread
     snapshot_received = pyqtSignal(str)
+    heartbeat_received = pyqtSignal()
+    
+    def __init__(self):
+        super().__init__()
+        # Shared state to track if Krita wants to pull a snapshot
+        self.request_export = False 
+
+    def trigger_export_request(self):
+        self.request_export = True
 
     def run(self):
         class RequestHandler(BaseHTTPRequestHandler):
@@ -20,25 +27,33 @@ class ServerThread(QThread):
                 self.send_header('Access-Control-Allow-Headers', 'Content-Type')
                 self.end_headers()
 
-            # Provide the current Krita document resolution to Electron
             def do_GET(self):
                 if self.path == '/resolution':
                     doc = Krita.instance().activeDocument()
                     res = {"width": doc.width(), "height": doc.height()} if doc else {"width": 1920, "height": 1080}
-                    
                     self.send_response(200)
                     self.send_header('Content-type', 'application/json')
                     self.send_header('Access-Control-Allow-Origin', '*')
                     self.end_headers()
                     self.wfile.write(json.dumps(res).encode('utf-8'))
                     
-                # ping endpoint for connection checks
                 elif self.path == '/ping':
+                    self.thread.heartbeat_received.emit()
+                    
+                    # Check if the Krita user clicked the Import button
+                    command = "none"
+                    if self.thread.request_export:
+                        command = "export"
+                        self.thread.request_export = False # Reset flag after sending
+                        
                     self.send_response(200)
                     self.send_header('Content-type', 'application/json')
                     self.send_header('Access-Control-Allow-Origin', '*')
                     self.end_headers()
-                    self.wfile.write(b'{"status": "connected"}')
+                    
+                    # Send the status AND the command to Electron
+                    response_data = {"status": "connected", "command": command}
+                    self.wfile.write(json.dumps(response_data).encode('utf-8'))
 
             def do_POST(self):
                 if self.path == '/snapshot':
