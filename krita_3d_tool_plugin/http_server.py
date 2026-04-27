@@ -1,4 +1,3 @@
-# plugin/http_server.py
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from krita import Krita #type:ignore
@@ -10,11 +9,16 @@ class ServerThread(QThread):
     
     def __init__(self):
         super().__init__()
-        # Shared state to track if Krita wants to pull a snapshot
-        self.request_export = False 
+        self.request_export = False
+        self.layer_payload = None # Stores base64 layers
+        self.command = "none"
 
     def trigger_export_request(self):
         self.request_export = True
+        
+    def queue_layer_export(self, payload):
+        self.layer_payload = payload
+        self.command = "pull_layers"
 
     def run(self):
         class RequestHandler(BaseHTTPRequestHandler):
@@ -40,20 +44,32 @@ class ServerThread(QThread):
                 elif self.path == '/ping':
                     self.thread.heartbeat_received.emit()
                     
-                    # Check if the Krita user clicked the Import button
-                    command = "none"
+                    cmd = self.thread.command
                     if self.thread.request_export:
-                        command = "export"
-                        self.thread.request_export = False # Reset flag after sending
+                        cmd = "export"
+                        self.thread.request_export = False
                         
+                    # Reset command state if it was consumed
+                    if cmd != "none" and cmd != "export":
+                        self.thread.command = "none"
+
                     self.send_response(200)
                     self.send_header('Content-type', 'application/json')
                     self.send_header('Access-Control-Allow-Origin', '*')
                     self.end_headers()
-                    
-                    # Send the status AND the command to Electron
-                    response_data = {"status": "connected", "command": command}
-                    self.wfile.write(json.dumps(response_data).encode('utf-8'))
+                    self.wfile.write(json.dumps({"status": "connected", "command": cmd}).encode('utf-8'))
+
+                # NEW: Endpoint to deliver the base64 layers
+                elif self.path == '/layers':
+                    self.send_response(200)
+                    self.send_header('Content-type', 'application/json')
+                    self.send_header('Access-Control-Allow-Origin', '*')
+                    self.end_headers()
+                    if self.thread.layer_payload:
+                        self.wfile.write(json.dumps(self.thread.layer_payload).encode('utf-8'))
+                        self.thread.layer_payload = None
+                    else:
+                        self.wfile.write(b'[]')
 
             def do_POST(self):
                 if self.path == '/snapshot':

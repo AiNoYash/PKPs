@@ -5,8 +5,6 @@ export function setupKritaHandlers() {
         try {
             const res = await fetch('http://127.0.0.1:5000/ping');
             if (!res.ok) return { connected: false };
-            
-            // NEW: Parse JSON to fetch the command attached by Krita
             const data = await res.json();
             return { connected: true, command: data.command };
         } catch (err) {
@@ -19,8 +17,17 @@ export function setupKritaHandlers() {
             const res = await fetch('http://127.0.0.1:5000/resolution');
             return await res.json();
         } catch (err) {
-            console.error("IPC: Krita resolution fetch failed:", err);
             return null; 
+        }
+    });
+
+    ipcMain.handle('krita:get-layers', async () => {
+        try {
+            const res = await fetch('http://127.0.0.1:5000/layers');
+            return await res.json();
+        } catch (err) {
+            console.error("IPC: Failed to fetch layers", err);
+            return [];
         }
     });
 
@@ -33,7 +40,6 @@ export function setupKritaHandlers() {
             });
             return res.ok;
         } catch (err) {
-            console.error("IPC: Krita snapshot send failed:", err);
             return false;
         }
     });

@@ -262,7 +262,9 @@ export const useStore = create((set) => ({
 
     isExportingToKrita: false,
     setExportingToKrita: (isExporting) => set({ isExportingToKrita: isExporting }),
-}));
 
+    kritaLayers: [],
+    setKritaLayers: (layers) => set({ kritaLayers: layers }),
+}));
 
 export const transformControlRef = { current: null };

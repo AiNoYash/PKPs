@@ -87,7 +87,7 @@ export function Scene() {
     const setKritaConnected = useStore((state) => state.setKritaConnected);
     
     const orbitRef = useRef(null);
-    
+
     const connectToKrita = async () => {
         const response = await window.kritaAPI.checkConnection();
         if (response.connected) {
@@ -97,17 +97,30 @@ export function Scene() {
         }
     };
 
-    // Background Heartbeat Watchdog & Command Listener
     useEffect(() => {
         const heartbeat = setInterval(async () => {
             if (!isExportingToKrita) {
                 const response = await window.kritaAPI.checkConnection();
                 setKritaConnected(response.connected);
                 
-                // NEW: Listen for Krita's import request
-                if (response.connected && response.command === 'export') {
-                    console.log("Krita requested a snapshot remotely! Triggering export...");
-                    setExportingToKrita(true);
+                if (response.connected) {
+                    // Command 1: Krita wants a snapshot
+                    if (response.command === 'export') {
+                        console.log("Krita requested a snapshot remotely! Triggering export...");
+                        setExportingToKrita(true);
+                    } 
+                    // Command 2: Krita has sent layers to the app
+                    else if (response.command === 'pull_layers') {
+                        console.log("Krita queued layers! Fetching payload...");
+                        const layers = await window.kritaAPI.getLayers();
+                        
+                        // Push into your Zustand state
+                        useStore.getState().setKritaLayers(layers);
+                        
+                        // Optional: Alert the user so they know it arrived
+                        alert(`Successfully imported ${layers.length} layers from Krita!`);
+                        console.log("Received Layers:", layers);
+                    }
                 }
             }
         }, 2000); 
