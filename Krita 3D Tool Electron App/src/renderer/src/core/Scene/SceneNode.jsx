@@ -18,6 +18,11 @@ export function SceneNode({ id }) {
     const selectInspectorObject = useStore((state) => state.selectInspectorObject);
     const selectedHandTool = useStore((state) => state.selectedHandTool);
 
+    // ? Here because idk you can't call react hooks inside conditional statements
+    const targetId = obj?.lightData?.targetId;
+    const targetObj = useStore((state) => targetId ? state.objects[targetId] : null);
+
+
     if (!obj) return null;
 
     const pos = [obj.transform.position.x, obj.transform.position.y, obj.transform.position.z];
@@ -25,9 +30,6 @@ export function SceneNode({ id }) {
     const scl = [obj.transform.scale.x, obj.transform.scale.y, obj.transform.scale.z];
 
 
-    // ? Here because idk you can't call react hooks inside conditional statements
-    const targetId = obj?.lightData?.targetId;
-    const targetObj = useStore((state) => targetId ? state.objects[targetId] : null);
 
 
     const renderChildren = () => {
