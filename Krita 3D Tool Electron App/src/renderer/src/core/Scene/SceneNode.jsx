@@ -24,6 +24,12 @@ export function SceneNode({ id }) {
     const rot = [obj.transform.rotation.x, obj.transform.rotation.y, obj.transform.rotation.z];
     const scl = [obj.transform.scale.x, obj.transform.scale.y, obj.transform.scale.z];
 
+
+    // ? Here because idk you can't call react hooks inside conditional statements
+    const targetId = obj?.lightData?.targetId;
+    const targetObj = useStore((state) => targetId ? state.objects[targetId] : null);
+
+
     const renderChildren = () => {
         return obj.childrenIds.map((childId) => (
             <SceneNode key={childId} id={childId} />
@@ -153,11 +159,14 @@ export function SceneNode({ id }) {
         case ObjectTypes.LIGHT: {
 
             const { lightType, targetId, color, intensity, castShadow } = obj.lightData;
-            
 
-            const targetObj = targetId ? useStore((state) => state.objects[targetId]) : null;
-            const targetPos = targetObj
-                ? [targetObj.transform.position.x, targetObj.transform.position.y, targetObj.transform.position.z]
+
+            const localTargetPos = targetObj
+                ? [
+                    targetObj.transform.position.x - obj.transform.position.x,
+                    targetObj.transform.position.y - obj.transform.position.y,
+                    targetObj.transform.position.z - obj.transform.position.z
+                ]
                 : [0, -1, 0];
 
 
@@ -180,14 +189,14 @@ export function SceneNode({ id }) {
 
                     {lightType === LightTypes.DIRECTIONAL && (
                         <directionalLight
-                        intensity={intensity}
-                        color={color}
-                        castShadow={castShadow}
+                            intensity={intensity}
+                            color={color}
+                            castShadow={castShadow}
                         >
-                            <object3D attach="target" position={targetPos} />
+                            <object3D attach="target" position={localTargetPos} />
                         </directionalLight>
                     )}
-                    
+
                     {renderChildren()}
                 </group>
             );

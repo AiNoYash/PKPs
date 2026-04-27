@@ -68,6 +68,7 @@ export const Project = () => {
       }
 
       setTreeData(result.tree);
+      console.log(result.tree);
 
       // On first load, auto-select and auto-expand the root node so the
       // panel doesn't appear blank — mirrors Unity's default behaviour.
@@ -81,6 +82,7 @@ export const Project = () => {
     } catch (err) {
       setError(`Failed to load project directory. Reason: ${err.message}`);
       setTreeData(null);
+      
     } finally {
       setIsLoading(false);
     }

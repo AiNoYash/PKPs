@@ -82,6 +82,8 @@ export const ObjectFactory = {
         // ? if a light is a directional light then we return both a target node and light node but remember the target node is not yet child of light
         if (lightType === LightTypes.DIRECTIONAL) {
             const targetNode = generateBaseNode("Target", ObjectTypes.GROUP, null);
+            baseNode.lightData.targetId = targetNode.id;
+            
             return { baseNode, targetNode };
         }
 
