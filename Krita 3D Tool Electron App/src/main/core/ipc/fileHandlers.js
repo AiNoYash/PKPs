@@ -20,7 +20,8 @@ import {
   renameAsset,
   deleteAsset, 
   getAssetPath, 
-  determineAssetType 
+  determineAssetType, 
+  getBase64
 } from "../services/AssetService.js";
 import { 
   createScene, 
@@ -417,6 +418,15 @@ ipcMain.handle("asset:getPath", async (_event, { guid }) => {
   if (guard) return guard;
 
   const result = getAssetPath(activeProjectPath, guid, activeTable);
+
+  return result;
+});
+
+ipcMain.handle("asset:getBase64", async (_event, filePath) => {
+  const guard = _requireActiveProject();
+  if (guard) return guard;
+
+  const result = getBase64(filePath);
 
   return result;
 });
