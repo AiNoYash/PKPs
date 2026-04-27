@@ -223,6 +223,71 @@ const importAsset = (projectPath, sourcePath, type, name, table) => {
 };
 
 // -----------------------------------------------------------------------------
+// renameAsset(projectPath, guid, newName, table)
+//
+// Renames a tracked asset on disk and updates the GUID table entry.
+//
+// What changes:
+//   - The actual file is renamed on disk (new filename = newName + original ext).
+//   - The .meta sidecar file is renamed to match the new file name.
+//   - The GUID table entry's filePath, metaPath, and name are updated.
+//
+// What does NOT change:
+//   - The GUID (permanent, never changes).
+//   - The meta file's internal content (guid, type, createdAt stay the same).
+//
+// Returns: { success, error }
+// -----------------------------------------------------------------------------
+export const renameAsset = (projectPath, guid, newName, table) => {
+  try {
+    const entry = getEntry(table, guid);
+ 
+    if (entry === null) {
+      return { success: false, error: `No asset found with GUID: ${guid}` };
+    }
+ 
+    const absoluteFilePath = toAbsolutePath(projectPath, entry.filePath);
+ 
+    if (!fs.existsSync(absoluteFilePath)) {
+      return { success: false, error: `Asset file not found on disk for GUID: ${guid}` };
+    }
+ 
+    const dir = path.dirname(absoluteFilePath);
+    const ext = path.extname(absoluteFilePath);
+ 
+    // Keep the original extension — only the base name changes.
+    const newFileName = newName.endsWith(ext) ? newName : `${newName}${ext}`;
+    const newAbsoluteFilePath = path.join(dir, newFileName);
+ 
+    // Guard against a collision with an existing file.
+    if (fs.existsSync(newAbsoluteFilePath) && newAbsoluteFilePath !== absoluteFilePath) {
+      return { success: false, error: `A file named "${newFileName}" already exists in this folder.` };
+    }
+ 
+    const oldAbsoluteMetaPath = absoluteFilePath + ".meta";
+    const newAbsoluteMetaPath = newAbsoluteFilePath + ".meta";
+ 
+    // Rename the actual file, then the sidecar meta file.
+    fs.renameSync(absoluteFilePath, newAbsoluteFilePath);
+ 
+    if (fs.existsSync(oldAbsoluteMetaPath)) {
+      fs.renameSync(oldAbsoluteMetaPath, newAbsoluteMetaPath);
+    }
+ 
+    // Update the in-memory table entry and persist.
+    entry.filePath = toRelativePath(projectPath, newAbsoluteFilePath);
+    entry.metaPath = toRelativePath(projectPath, newAbsoluteMetaPath);
+    entry.name = newName;
+ 
+    saveTable(projectPath, table);
+ 
+    return { success: true, error: null };
+  } catch (err) {
+    return { success: false, error: `Failed to rename asset. Reason: ${err.message}` };
+  }
+};
+
+// -----------------------------------------------------------------------------
 // deleteAsset(projectPath, guid, table)
 //
 // Deletes a tracked asset entirely:

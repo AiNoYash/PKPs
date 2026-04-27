@@ -45,12 +45,36 @@ const handleOpenProject = async () => {
 
 const handleFileImport = async () => {
     // 1. Open the native file picker
-    const filePath = await invoke('dialog:openFileImport');
+    const sourcePath = await invoke('dialog:openFileImport');
+    if (!sourcePath) return; // User canceled
 
-    if (!filePath) return; // User canceled
+    // Extract a default name from the file path (e.g., "model.glb" from "C:/docs/model.glb")
+    const fileName = sourcePath.split(/[/\\]/).pop();
 
-    console.log("file path: ",filePath);
-}
+    // 2. Ask the backend to determine the asset type (model, texture, krita, etc.)
+    const typeResult = await invoke('asset:determineType', { sourcePath });
+    
+    if (!typeResult.success) {
+        console.error("Import failed:", typeResult.error);
+        // Optional: Show an error alert to the user here
+        return;
+    }
+
+    // 3. Send the file to the backend to be copied into the active project and assigned a GUID
+    const importResult = await invoke('asset:import', { 
+        sourcePath, 
+        type: typeResult.assetType, 
+        name: fileName 
+    });
+
+    if (importResult.success) {
+        console.log("File imported successfully!", importResult);
+        // 4. Tell the Zustand store that the file tree needs to be refreshed
+        useStore.getState().triggerTreeRefresh();
+    } else {
+        console.error("Failed to import file:", importResult.error);
+    }
+};
 
 export const fileMenuItems = [
     { label: 'New Project...', shortcut: 'Ctrl+Shift+N', action: handleNewProject },
