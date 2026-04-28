@@ -11,6 +11,14 @@ export function SceneTransformController() {
     const selectedHandTool = useStore((state) => state.selectedHandTool);
     const updateTransform = useStore((state) => state.updateTransform);
 
+
+    const isGridModeOn = useStore((state) => state.isGridModeOn);
+    const gridX = useStore((state) => state.gridX);
+    const gridY = useStore((state) => state.gridY);
+    const gridZ = useStore((state) => state.gridZ);
+
+
+
     const [targetObject, setTargetObject] = useState(null);
 
     // Sync the Three.js object reference when selection changes
@@ -36,10 +44,13 @@ export function SceneTransformController() {
 
     return (
         <TransformControls
-            ref={(node) => { transformControlRef.current = node }}
-            object={targetObject}
-            mode={selectedHandTool.toLowerCase()}
-            onMouseUp={handleTransformEnd}
+        ref={(node) => { transformControlRef.current = node }}
+        object={targetObject}
+        mode={selectedHandTool.toLowerCase()}
+        onMouseUp={handleTransformEnd}
+        translationSnap={isGridModeOn ? gridX : null}
+        rotationSnap={isGridModeOn ? gridY : null}
+        scaleSnap={isGridModeOn ? gridZ : null}
         />
     );
 }

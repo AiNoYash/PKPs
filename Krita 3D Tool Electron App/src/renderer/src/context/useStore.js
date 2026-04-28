@@ -8,12 +8,13 @@ export const useStore = create((set) => ({
 
     activeFileTree: null,
     setActiveFileTree: (newActiveFileTree) => { set({ activeFileTree: newActiveFileTree }) },
-    isGridModeOn: false,
-    setisGridModeOn: () => set((state) => ({isGridModeOn: !(state.isGridModeOn)})),
 
-    gridX: 0,
-    gridY: 0,
-    gridZ: 0,
+    isGridModeOn: false,
+    setisGridModeOn: () => set((state) => ({ isGridModeOn: !(state.isGridModeOn) })),
+
+    gridX: 0.5,
+    gridY: 5,
+    gridZ: 0.1,
     setGridX: (val) => set({ gridX: val }),
     setGridY: (val) => set({ gridY: val }),
     setGridZ: (val) => set({ gridZ: val }),
