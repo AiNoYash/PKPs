@@ -3,6 +3,10 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from krita import Krita #type:ignore
 from PyQt5.QtCore import QThread, pyqtSignal #type:ignore
 
+# NEW: This completely prevents the "Port already in use" connection failures
+class KritaHTTPServer(HTTPServer):
+    allow_reuse_address = True 
+
 class ServerThread(QThread):
     snapshot_received = pyqtSignal(str)
     heartbeat_received = pyqtSignal()
@@ -10,7 +14,7 @@ class ServerThread(QThread):
     def __init__(self):
         super().__init__()
         self.request_export = False
-        self.layer_payload = None # Stores base64 layers
+        self.layer_payload = None 
         self.command = "none"
 
     def trigger_export_request(self):
@@ -24,6 +28,10 @@ class ServerThread(QThread):
         class RequestHandler(BaseHTTPRequestHandler):
             thread = self
             
+            # Optional: Add this to stop HTTP requests from spamming your terminal logs
+            def log_message(self, format, *args):
+                pass 
+            
             def do_OPTIONS(self):
                 self.send_response(200)
                 self.send_header('Access-Control-Allow-Origin', '*')
@@ -33,12 +41,15 @@ class ServerThread(QThread):
 
             def do_GET(self):
                 if self.path == '/resolution':
-                    # Read the pre-cached resolution instead of calling Krita.instance()
-                    res = self.thread.canvas_res
+                    # REPAIRED: Reverted to the stable API call and properly defined response_bytes
+                    doc = Krita.instance().activeDocument()
+                    res = {"width": doc.width(), "height": doc.height()} if doc else {"width": 1920, "height": 1080}
+                    response_bytes = json.dumps(res).encode('utf-8')
+                    
                     self.send_response(200)
                     self.send_header('Content-type', 'application/json')
                     self.send_header('Access-Control-Allow-Origin', '*')
-                    self.send_header('Content-Length', str(len(response_bytes))) # NEW
+                    self.send_header('Content-Length', str(len(response_bytes))) 
                     self.end_headers()
                     self.wfile.write(response_bytes)
                     
@@ -58,7 +69,7 @@ class ServerThread(QThread):
                     self.send_response(200)
                     self.send_header('Content-type', 'application/json')
                     self.send_header('Access-Control-Allow-Origin', '*')
-                    self.send_header('Content-Length', str(len(response_bytes))) # NEW
+                    self.send_header('Content-Length', str(len(response_bytes))) 
                     self.end_headers()
                     self.wfile.write(response_bytes)
 
@@ -71,7 +82,7 @@ class ServerThread(QThread):
                     self.send_response(200)
                     self.send_header('Content-type', 'application/json')
                     self.send_header('Access-Control-Allow-Origin', '*')
-                    self.send_header('Content-Length', str(len(response_bytes))) # NEW
+                    self.send_header('Content-Length', str(len(response_bytes))) 
                     self.end_headers()
                     self.wfile.write(response_bytes)
 
@@ -91,12 +102,11 @@ class ServerThread(QThread):
                     self.send_response(200)
                     self.send_header('Content-type', 'application/json')
                     self.send_header('Access-Control-Allow-Origin', '*')
-                    self.send_header('Content-Length', str(len(response_bytes))) # NEW
+                    self.send_header('Content-Length', str(len(response_bytes))) 
                     self.end_headers()
                     self.wfile.write(response_bytes)
                     
-                    
-                    
         server_address = ('127.0.0.1', 5000)
-        self.httpd = HTTPServer(server_address, RequestHandler)
+        # REPAIRED: Using the new class that forces port binding
+        self.httpd = KritaHTTPServer(server_address, RequestHandler)
         self.httpd.serve_forever()
